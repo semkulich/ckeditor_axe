@@ -36,7 +36,9 @@ class CkeditorAxe extends PluginBase implements CKEditorPluginInterface, CKEdito
    * {@inheritdoc}
    */
   public function getLibraries(Editor $editor) {
-    return [];
+    return [
+      'ckeditor_axe/axe',
+    ];
   }
 
   /**
