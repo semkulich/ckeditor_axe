@@ -1,0 +1,5 @@
+axe:
+  js:
+    js/axe.js: {}
+  dependencies:
+    - core/jquery

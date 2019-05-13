@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains ckeditor_axe.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ckeditor_axe_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.ckeditor_axe':
+      $output = '';
+      $output .= '<h3>' . t('Ckeditor AXE') . '</h3>';
+      $output .= '<p>' . t('The module adds a AXE button to the editor toolbar.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
