@@ -3,3 +3,10 @@ axe:
     js/axe.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/backbone
+    - core/jquery.joyride
+    - tour/tour-styling
+    - core/drupalSettings
+    - core/drupal.dialog.ajax
