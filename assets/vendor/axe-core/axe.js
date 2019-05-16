@@ -1,4 +1,4 @@
-/*! axe v3.2.2
+/*! aXe v3.2.2
  * Copyright (c) 2019 Deque Systems, Inc.
  *
  * Your use of this Source Code Form is subject to the terms of the Mozilla Public
@@ -13,18 +13,11 @@
   var global = window;
   var document = window.document;
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   var axe = axe || {};
   axe.version = '3.2.2';
   if (typeof define === 'function' && define.amd) {
@@ -44,10 +37,10 @@
   function SupportError(error) {
     this.name = 'SupportError';
     this.cause = error.cause;
-    this.message = '`'.concat(error.cause, '` - feature unsupported in your environment.');
+    this.message = '`' + error.cause + '` - feature unsupported in your environment.';
     if (error.ruleId) {
       this.ruleId = error.ruleId;
-      this.message += ' Skipping '.concat(this.ruleId, ' rule.');
+      this.message += ' Skipping ' + this.ruleId + ' rule.';
     }
     this.stack = new Error().stack;
   }
@@ -86,9 +79,7 @@
     return r;
   })()({
     1: [ function(_dereq_, module, exports) {
-      if (!('Promise' in window)) {
-        _dereq_('es6-promise').polyfill();
-      }
+      _dereq_('es6-promise').polyfill();
       axe.imports = {
         axios: _dereq_('axios'),
         CssSelectorParser: _dereq_('css-selector-parser').CssSelectorParser,
@@ -2365,32 +2356,22 @@
   'use strict';
   var helpers = {};
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
-  function _extends() {
-    _extends = Object.assign || function(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
+  var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
         }
       }
-      return target;
-    };
-    return _extends.apply(this, arguments);
-  }
+    }
+    return target;
+  };
   function getDefaultConfiguration(audit) {
     'use strict';
     var config;
@@ -2496,7 +2477,7 @@
     for (var i = 0; i < keys.length; i++) {
       var id = keys[i];
       if (!this.data.checks[id]) {
-        throw new Error('Locale provided for unknown check: "'.concat(id, '"'));
+        throw new Error('Locale provided for unknown check: "' + id + '"');
       }
       this.data.checks[id] = mergeCheckLocale(this.data.checks[id], checks[id]);
     }
@@ -2506,7 +2487,7 @@
     for (var i = 0; i < keys.length; i++) {
       var id = keys[i];
       if (!this.data.rules[id]) {
-        throw new Error('Locale provided for unknown rule: "'.concat(id, '"'));
+        throw new Error('Locale provided for unknown rule: "' + id + '"');
       }
       this.data.rules[id] = mergeRuleLocale(this.data.rules[id], rules[id]);
     }
@@ -2555,7 +2536,7 @@
   Audit.prototype.addCheck = function(spec) {
     'use strict';
     var metadata = spec.metadata;
-    if (_typeof(metadata) === 'object') {
+    if ((typeof metadata === 'undefined' ? 'undefined' : _typeof(metadata)) === 'object') {
       this.data.checks[spec.id] = metadata;
       if (_typeof(metadata.messages) === 'object') {
         Object.keys(metadata.messages).filter(function(prop) {
@@ -2632,7 +2613,7 @@
         axe.utils.preload(options).then(function(preloadResults) {
           var assets = preloadResults[0];
           res(assets);
-        })['catch'](function(err) {
+        }).catch(function(err) {
           console.warn('Couldn\'t load preload assets: ', err);
           var assets = undefined;
           res(assets);
@@ -2668,8 +2649,8 @@
         resolve(nowRulesResults.concat(laterRuleResults).filter(function(result) {
           return !!result;
         }));
-      })['catch'](reject);
-    })['catch'](reject);
+      }).catch(reject);
+    }).catch(reject);
   };
   Audit.prototype.after = function(results, options) {
     'use strict';
@@ -2677,7 +2658,7 @@
     return results.map(function(ruleResult) {
       var rule = axe.utils.findBy(rules, 'id', ruleResult.id);
       if (!rule) {
-        throw new Error('Result for unknown rule. You may be running mismatch axe-core versions');
+        throw new Error('Result for unknown rule. You may be running mismatch aXe-core versions');
       }
       return rule.after(ruleResult, options);
     });
@@ -2723,7 +2704,7 @@
           axe.log('Could not find tags `' + unmatchedTags.join('`, `') + '`');
         }
       } else {
-        throw new Error('Unknown runOnly type \''.concat(only.type, '\''));
+        throw new Error('Unknown runOnly type \'' + only.type + '\'');
       }
     }
     if (_typeof(options.rules) === 'object') {
@@ -2834,18 +2815,11 @@
     });
   };
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   function pushUniqueFrame(collection, frame) {
     'use strict';
     if (axe.utils.isHidden(frame)) {
@@ -2886,7 +2860,7 @@
   }
   function normalizeContext(context) {
     'use strict';
-    if (context && _typeof(context) === 'object' || context instanceof NodeList) {
+    if (context && (typeof context === 'undefined' ? 'undefined' : _typeof(context)) === 'object' || context instanceof NodeList) {
       if (context instanceof Node) {
         return {
           include: [ context ],
@@ -3038,30 +3012,12 @@
     return true;
   };
   Rule.prototype.gather = function(context) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var markStart = 'mark_gather_start_' + this.id;
-    var markEnd = 'mark_gather_end_' + this.id;
-    var markHiddenStart = 'mark_isHidden_start_' + this.id;
-    var markHiddenEnd = 'mark_isHidden_end_' + this.id;
-    if (options.performanceTimer) {
-      axe.utils.performanceTimer.mark(markStart);
-    }
+    'use strict';
     var elements = axe.utils.select(this.selector, context);
     if (this.excludeHidden) {
-      if (options.performanceTimer) {
-        axe.utils.performanceTimer.mark(markHiddenStart);
-      }
-      elements = elements.filter(function(element) {
+      return elements.filter(function(element) {
         return !axe.utils.isHidden(element.actualNode);
       });
-      if (options.performanceTimer) {
-        axe.utils.performanceTimer.mark(markHiddenEnd);
-        axe.utils.performanceTimer.measure('rule_' + this.id + '#gather_axe.utils.isHidden', markHiddenStart, markHiddenEnd);
-      }
-    }
-    if (options.performanceTimer) {
-      axe.utils.performanceTimer.mark(markEnd);
-      axe.utils.performanceTimer.measure('rule_' + this.id + '#gather', markStart, markEnd);
     }
     return elements;
   };
@@ -3084,7 +3040,7 @@
         type: type,
         results: results
       });
-    })['catch'](reject);
+    }).catch(reject);
   };
   Rule.prototype.run = function(context, options, resolve, reject) {
     var _this = this;
@@ -3094,9 +3050,11 @@
     var markEnd = 'mark_rule_end_' + this.id;
     var markChecksStart = 'mark_runchecks_start_' + this.id;
     var markChecksEnd = 'mark_runchecks_end_' + this.id;
-    var nodes;
+    var nodes = void 0;
     try {
-      nodes = this.gatherAndMatchNodes(context, options);
+      nodes = this.gather(context).filter(function(node) {
+        return _this.matches(node.actualNode, node, context);
+      });
     } catch (error) {
       reject(new SupportError({
         cause: error,
@@ -3105,7 +3063,7 @@
       return;
     }
     if (options.performanceTimer) {
-      axe.log(this.id, 'gather (', nodes.length, '):', axe.utils.performanceTimer.timeElapsed() + 'ms');
+      axe.log('gather (', nodes.length, '):', axe.utils.performanceTimer.timeElapsed() + 'ms');
       axe.utils.performanceTimer.mark(markChecksStart);
     }
     nodes.forEach(function(node) {
@@ -3134,7 +3092,7 @@
             }
           }
           resolveNode();
-        })['catch'](function(err) {
+        }).catch(function(err) {
           return rejectNode(err);
         });
       });
@@ -3145,31 +3103,14 @@
     if (options.performanceTimer) {
       axe.utils.performanceTimer.mark(markChecksEnd);
       axe.utils.performanceTimer.mark(markEnd);
-      axe.utils.performanceTimer.measure('rule_' + this.id + '#runchecks', markChecksStart, markChecksEnd);
+      axe.utils.performanceTimer.measure('runchecks_' + this.id, markChecksStart, markChecksEnd);
       axe.utils.performanceTimer.measure('rule_' + this.id, markStart, markEnd);
     }
     q.then(function() {
       return resolve(ruleResult);
-    })['catch'](function(error) {
+    }).catch(function(error) {
       return reject(error);
     });
-  };
-  Rule.prototype.gatherAndMatchNodes = function(context, options) {
-    var _this2 = this;
-    var markMatchesStart = 'mark_matches_start_' + this.id;
-    var markMatchesEnd = 'mark_matches_end_' + this.id;
-    var nodes = this.gather(context, options);
-    if (options.performanceTimer) {
-      axe.utils.performanceTimer.mark(markMatchesStart);
-    }
-    nodes = nodes.filter(function(node) {
-      return _this2.matches(node.actualNode, node, context);
-    });
-    if (options.performanceTimer) {
-      axe.utils.performanceTimer.mark(markMatchesEnd);
-      axe.utils.performanceTimer.measure('rule_' + this.id + '#matches', markMatchesStart, markMatchesEnd);
-    }
-    return nodes;
   };
   function findAfterChecks(rule) {
     'use strict';
@@ -3327,18 +3268,11 @@
     });
   })(axe);
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   axe.log = function() {
     'use strict';
     if ((typeof console === 'undefined' ? 'undefined' : _typeof(console)) === 'object' && console.log) {
@@ -3382,7 +3316,7 @@
       } else {
         reject(cleanupErrors);
       }
-    })['catch'](reject);
+    }).catch(reject);
   }
   axe.cleanup = cleanupPlugins;
   'use strict';
@@ -3586,7 +3520,7 @@
         axe.utils.collectResultsFromFrames(context, options, 'rules', null, res, rej);
       });
     }
-    var scrollState;
+    var scrollState = void 0;
     q.defer(function(res, rej) {
       if (options.restoreScroll) {
         scrollState = axe.utils.getScrollState();
@@ -3621,25 +3555,18 @@
         cleanup();
         reject(e);
       }
-    })['catch'](function(e) {
+    }).catch(function(e) {
       cleanup();
       reject(e);
     });
   }
   axe._runRules = runRules;
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   function isContext(potential) {
     'use strict';
     switch (true) {
@@ -3649,7 +3576,7 @@
      case NodeList && potential instanceof NodeList:
       return true;
 
-     case _typeof(potential) !== 'object':
+     case (typeof potential === 'undefined' ? 'undefined' : _typeof(potential)) !== 'object':
       return false;
 
      case potential.include !== undefined:
@@ -3673,7 +3600,7 @@
       options = context;
       context = document;
     }
-    if (_typeof(options) !== 'object') {
+    if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) !== 'object') {
       if (callback !== undefined) {
         throw typeErr;
       }
@@ -3702,7 +3629,7 @@
     if (options.performanceTimer) {
       axe.utils.performanceTimer.start();
     }
-    var p;
+    var p = void 0;
     var reject = noop;
     var resolve = noop;
     if (typeof Promise === 'function' && callback === noop) {
@@ -3764,7 +3691,7 @@
   'use strict';
   helpers.getEnvironmentData = function getEnvironmentData() {
     var win = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
-    var _win$screen = win.screen, screen = _win$screen === void 0 ? {} : _win$screen, _win$navigator = win.navigator, navigator = _win$navigator === void 0 ? {} : _win$navigator, _win$location = win.location, location = _win$location === void 0 ? {} : _win$location, innerHeight = win.innerHeight, innerWidth = win.innerWidth;
+    var _win$screen = win.screen, screen = _win$screen === undefined ? {} : _win$screen, _win$navigator = win.navigator, navigator = _win$navigator === undefined ? {} : _win$navigator, _win$location = win.location, location = _win$location === undefined ? {} : _win$location, innerHeight = win.innerHeight, innerWidth = win.innerWidth;
     var orientation = screen.msOrientation || screen.orientation || screen.mozOrientation || {};
     return {
       testEngine: {
@@ -3791,18 +3718,11 @@
     return axe._audit.data.incompleteFallbackMessage();
   };
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   function normalizeRelatedNodes(node, options) {
     'use strict';
     [ 'any', 'all', 'none' ].forEach(function(type) {
@@ -3874,20 +3794,17 @@
     return resultObject;
   };
   'use strict';
-  function _extends() {
-    _extends = Object.assign || function(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
+  var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
         }
       }
-      return target;
-    };
-    return _extends.apply(this, arguments);
-  }
+    }
+    return target;
+  };
   axe.addReporter('na', function(results, options, callback) {
     'use strict';
     if (typeof options === 'function') {
@@ -3904,20 +3821,17 @@
     }));
   });
   'use strict';
-  function _extends() {
-    _extends = Object.assign || function(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
+  var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
         }
       }
-      return target;
-    };
-    return _extends.apply(this, arguments);
-  }
+    }
+    return target;
+  };
   axe.addReporter('no-passes', function(results, options, callback) {
     'use strict';
     if (typeof options === 'function') {
@@ -3941,20 +3855,17 @@
     callback(results);
   });
   'use strict';
-  function _extends() {
-    _extends = Object.assign || function(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
+  var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
         }
       }
-      return target;
-    };
-    return _extends.apply(this, arguments);
-  }
+    }
+    return target;
+  };
   axe.addReporter('v1', function(results, options, callback) {
     'use strict';
     if (typeof options === 'function') {
@@ -3976,20 +3887,17 @@
     }));
   });
   'use strict';
-  function _extends() {
-    _extends = Object.assign || function(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
+  var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
         }
       }
-      return target;
-    };
-    return _extends.apply(this, arguments);
-  }
+    }
+    return target;
+  };
   axe.addReporter('v2', function(results, options, callback) {
     'use strict';
     if (typeof options === 'function') {
@@ -4200,22 +4108,15 @@
     };
   };
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   axe.utils.clone = function(obj) {
     'use strict';
     var index, length, out = obj;
-    if (obj !== null && _typeof(obj) === 'object') {
+    if (obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') {
       if (Array.isArray(obj)) {
         out = [];
         for (index = 0, length = obj.length; index < length; index++) {
@@ -4304,7 +4205,7 @@
     });
     q.then(function(data) {
       resolve(axe.utils.mergeResults(data, options));
-    })['catch'](reject);
+    }).catch(reject);
   }
   axe.utils.collectResultsFromFrames = collectResultsFromFrames;
   'use strict';
@@ -4329,9 +4230,7 @@
   'use strict';
   (function(axe) {
     var parser = new axe.imports.CssSelectorParser();
-    parser.registerSelectorPseudos('not');
     parser.registerNestingOperators('>');
-    parser.registerAttrEqualityMods('^', '$', '*');
     axe.utils.cssParser = parser;
   })(axe);
   'use strict';
@@ -4459,22 +4358,15 @@
     return ruleResult;
   };
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   axe.utils.findBy = function(array, key, value) {
     if (Array.isArray(array)) {
       return array.find(function(obj) {
-        return _typeof(obj) === 'object' && obj[key] === value;
+        return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj[key] === value;
       });
     }
   };
@@ -4619,45 +4511,45 @@
     };
   };
   'use strict';
-  function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
-  }
-  function _nonIterableRest() {
-    throw new TypeError('Invalid attempt to destructure non-iterable instance');
-  }
-  function _iterableToArrayLimit(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-        if (i && _arr.length === i) {
-          break;
-        }
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
+  var _slicedToArray = function() {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
       try {
-        if (!_n && _i['return'] != null) {
-          _i['return']();
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+          if (i && _arr.length === i) {
+            break;
+          }
         }
+      } catch (err) {
+        _d = true;
+        _e = err;
       } finally {
-        if (_d) {
-          throw _e;
+        try {
+          if (!_n && _i['return']) {
+            _i['return']();
+          }
+        } finally {
+          if (_d) {
+            throw _e;
+          }
         }
       }
+      return _arr;
     }
-    return _arr;
-  }
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) {
-      return arr;
-    }
-  }
+    return function(arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError('Invalid attempt to destructure non-iterable instance');
+      }
+    };
+  }();
   function isMostlyNumbers() {
     var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     return str.length !== 0 && (str.match(/[0-9]/g) || '').length >= str.length / 2;
@@ -4725,7 +4617,7 @@
     if (uri.length <= 1 || uri.substr(0, 5) === 'data:' || uri.substr(0, 11) === 'javascript:' || uri.includes('?')) {
       return;
     }
-    var currentDomain = options.currentDomain, _options$maxLength = options.maxLength, maxLength = _options$maxLength === void 0 ? 25 : _options$maxLength;
+    var currentDomain = options.currentDomain, _options$maxLength = options.maxLength, maxLength = _options$maxLength === undefined ? 25 : _options$maxLength;
     var _uriParser = uriParser(uri), path = _uriParser.path, domain = _uriParser.domain, hash = _uriParser.hash;
     var pathEnd = path.substr(path.substr(0, path.length - 2).lastIndexOf('/') + 1);
     if (hash) {
@@ -4748,13 +4640,6 @@
     }
   };
   'use strict';
-  axe.utils.getNodeAttributes = function getNodeAttributes(node) {
-    if (node.attributes instanceof window.NamedNodeMap) {
-      return node.attributes;
-    }
-    return node.cloneNode(false).attributes;
-  };
-  'use strict';
   axe.utils.getRootNode = function getRootNode(node) {
     var doc = node.getRootNode && node.getRootNode() || document;
     if (doc === node) {
@@ -4764,12 +4649,12 @@
   };
   'use strict';
   var escapeSelector = axe.utils.escapeSelector;
-  var isXHTML;
+  var isXHTML = void 0;
   var ignoredAttributes = [ 'class', 'style', 'id', 'selected', 'checked', 'disabled', 'tabindex', 'aria-checked', 'aria-selected', 'aria-invalid', 'aria-activedescendant', 'aria-busy', 'aria-disabled', 'aria-expanded', 'aria-grabbed', 'aria-pressed', 'aria-valuenow' ];
   var MAXATTRIBUTELENGTH = 31;
   function getAttributeNameValue(node, at) {
     var name = at.name;
-    var atnv;
+    var atnv = void 0;
     if (name.indexOf('href') !== -1 || name.indexOf('src') !== -1) {
       var friendly = axe.utils.getFriendlyUriEnd(node.getAttribute(name));
       if (friendly) {
@@ -4822,8 +4707,8 @@
             }
           });
         }
-        if (node.hasAttributes()) {
-          Array.from(axe.utils.getNodeAttributes(node)).filter(filterAttributes).forEach(function(at) {
+        if (node.attributes) {
+          Array.from(node.attributes).filter(filterAttributes).forEach(function(at) {
             var atnv = getAttributeNameValue(node, at);
             if (atnv) {
               if (data.attributes[atnv]) {
@@ -4898,8 +4783,8 @@
     var retVal = [];
     var attData = selectorData.attributes;
     var tagData = selectorData.tags;
-    if (node.hasAttributes()) {
-      Array.from(axe.utils.getNodeAttributes(node)).filter(filterAttributes).forEach(function(at) {
+    if (node.attributes) {
+      Array.from(node.attributes).filter(filterAttributes).forEach(function(at) {
         var atnv = getAttributeNameValue(node, at);
         if (atnv && attData[atnv] < tagData[node.nodeName]) {
           retVal.push({
@@ -4914,7 +4799,7 @@
   }
   function getThreeLeastCommonFeatures(elm, selectorData) {
     var selector = '';
-    var features;
+    var features = void 0;
     var clss = uncommonClasses(elm, selectorData);
     var atts = uncommonAttributes(elm, selectorData);
     if (clss.length && clss[0].count === 1) {
@@ -4951,9 +4836,9 @@
     if (!axe._selectorData) {
       throw new Error('Expect axe._selectorData to be set up');
     }
-    var _options$toRoot = options.toRoot, toRoot = _options$toRoot === void 0 ? false : _options$toRoot;
-    var selector;
-    var similar;
+    var _options$toRoot = options.toRoot, toRoot = _options$toRoot === undefined ? false : _options$toRoot;
+    var selector = void 0;
+    var similar = void 0;
     do {
       var features = getElmId(elm);
       if (!features) {
@@ -5065,9 +4950,9 @@
   function xpathToString(xpathArray) {
     return xpathArray.reduce(function(str, elm) {
       if (elm.id) {
-        return '/'.concat(elm.str, '[@id=\'').concat(elm.id, '\']');
+        return '/' + elm.str + '[@id=\'' + elm.id + '\']';
       } else {
-        return str + '/'.concat(elm.str) + (elm.count > 0 ? '['.concat(elm.count, ']') : '');
+        return str + ('/' + elm.str) + (elm.count > 0 ? '[' + elm.count + ']' : '');
       }
     }, '');
   }
@@ -5274,10 +5159,7 @@
           axe.log('Measure ' + req.name + ' took ' + req.duration + 'ms');
         }
         if (window.performance && window.performance.getEntriesByType !== undefined) {
-          var axeStart = window.performance.getEntriesByName('mark_axe_start')[0];
-          var measures = window.performance.getEntriesByType('measure').filter(function(measure) {
-            return measure.startTime >= axeStart.startTime;
-          });
+          var measures = window.performance.getEntriesByType('measure');
           for (var i = 0; i < measures.length; ++i) {
             var req = measures[i];
             if (req.name === measureName) {
@@ -5512,38 +5394,29 @@
   }
   'use strict';
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-  }
-  function _nonIterableSpread() {
-    throw new TypeError('Invalid attempt to spread non-iterable instance');
-  }
-  function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === '[object Arguments]') {
-      return Array.from(iter);
-    }
-  }
-  function _arrayWithoutHoles(arr) {
     if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
         arr2[i] = arr[i];
       }
       return arr2;
+    } else {
+      return Array.from(arr);
     }
   }
   axe.utils.preloadCssom = function preloadCssom(_ref) {
-    var timeout = _ref.timeout, _ref$treeRoot = _ref.treeRoot, treeRoot = _ref$treeRoot === void 0 ? axe._tree[0] : _ref$treeRoot;
+    var timeout = _ref.timeout, _ref$treeRoot = _ref.treeRoot, treeRoot = _ref$treeRoot === undefined ? axe._tree[0] : _ref$treeRoot;
     var rootNodes = getAllRootNodesInTree(treeRoot);
     var q = axe.utils.queue();
     if (!rootNodes.length) {
       return q;
     }
-    var dynamicDoc = document.implementation.createHTMLDocument('New Document');
+    var dynamicDoc = document.implementation.createHTMLDocument();
     var convertDataToStylesheet = getStyleSheetFactory(dynamicDoc);
     q.defer(function(resolve, reject) {
       getCssomForAllRootNodes(rootNodes, convertDataToStylesheet, timeout).then(function(assets) {
         var cssom = processCssomAssets(assets);
         resolve(cssom);
-      })['catch'](reject);
+      }).catch(reject);
     });
     return q;
   };
@@ -5565,10 +5438,10 @@
   }
   var getStyleSheetFactory = function getStyleSheetFactory(dynamicDoc) {
     return function(_ref2) {
-      var data = _ref2.data, isExternal = _ref2.isExternal, shadowId = _ref2.shadowId, root = _ref2.root, priority = _ref2.priority, _ref2$isLink = _ref2.isLink, isLink = _ref2$isLink === void 0 ? false : _ref2$isLink;
+      var data = _ref2.data, isExternal = _ref2.isExternal, shadowId = _ref2.shadowId, root = _ref2.root, priority = _ref2.priority, _ref2$isLink = _ref2.isLink, isLink = _ref2$isLink === undefined ? false : _ref2$isLink;
       var style = dynamicDoc.createElement('style');
       if (isLink) {
-        var text = dynamicDoc.createTextNode('@import "'.concat(data.href, '"'));
+        var text = dynamicDoc.createTextNode('@import "' + data.href + '"');
         style.appendChild(text);
       } else {
         style.appendChild(dynamicDoc.createTextNode(data));
@@ -5594,7 +5467,7 @@
           timeout: timeout,
           convertDataToStylesheet: convertDataToStylesheet,
           rootIndex: index + 1
-        }).then(resolve)['catch'](reject);
+        }).then(resolve).catch(reject);
       });
     });
     return q;
@@ -5669,7 +5542,7 @@
             root: options.rootNode,
             shadowId: options.shadowId
           }));
-        })['catch'](reject);
+        }).catch(reject);
       });
     });
     var nonImportCSSRules = rules.filter(function(r) {
@@ -5711,13 +5584,13 @@
           root: options.rootNode,
           shadowId: options.shadowId
         }));
-      })['catch'](reject);
+      }).catch(reject);
     });
     return q;
   }
   function getStylesheetsOfRootNode(options) {
     var rootNode = options.rootNode, shadowId = options.shadowId;
-    var sheets;
+    var sheets = void 0;
     if (rootNode.nodeType === 11 && shadowId) {
       sheets = getStylesheetsFromDocumentFragment(options);
     } else {
@@ -5773,6 +5646,11 @@
     });
   }
   'use strict';
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   function _defineProperty(obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
@@ -5786,20 +5664,8 @@
     }
     return obj;
   }
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
   function isValidPreloadObject(preload) {
-    return _typeof(preload) === 'object' && Array.isArray(preload.assets);
+    return (typeof preload === 'undefined' ? 'undefined' : _typeof(preload)) === 'object' && Array.isArray(preload.assets);
   }
   axe.utils.shouldPreload = function shouldPreload(options) {
     if (!options || options.preload === undefined || options.preload === null) {
@@ -5825,7 +5691,7 @@
       return axe.constants.preloadAssets.includes(a.toLowerCase());
     });
     if (!areRequestedAssetsValid) {
-      throw new Error('Requested assets, not supported. ' + 'Supported assets are: '.concat(axe.constants.preloadAssets.join(', '), '.'));
+      throw new Error('Requested assets, not supported. ' + ('Supported assets are: ' + axe.constants.preloadAssets.join(', ') + '.'));
     }
     config.assets = axe.utils.uniqueArray(options.preload.assets.map(function(a) {
       return a.toLowerCase();
@@ -5849,28 +5715,21 @@
       q.defer(function(resolve, reject) {
         preloadFunctionsMap[asset](preloadConfig).then(function(results) {
           resolve(_defineProperty({}, asset, results[0]));
-        })['catch'](reject);
+        }).catch(reject);
       });
     });
     return q;
   };
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   function getIncompleteReason(checkData, messages) {
     function getDefaultMsg(messages) {
-      if (messages.incomplete && messages.incomplete['default']) {
-        return messages.incomplete['default'];
+      if (messages.incomplete && messages.incomplete.default) {
+        return messages.incomplete.default;
       } else {
         return helpers.incompleteFallbackMessage();
       }
@@ -6052,7 +5911,7 @@
     return pseudos.map(function(p) {
       var expressions;
       if (p.name === 'not') {
-        expressions = p.value;
+        expressions = axe.utils.cssParser.parse(p.value);
         expressions = expressions.selectors ? expressions.selectors : [ expressions ];
         expressions = convertExpressions(expressions);
       }
@@ -6150,18 +6009,11 @@
     return matchExpressions(domTree, expressions, true, filter);
   };
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   (function() {
     'use strict';
     function noop() {}
@@ -6214,10 +6066,10 @@
       }
       var q = {
         defer: function defer(fn) {
-          if (_typeof(fn) === 'object' && fn.then && fn['catch']) {
+          if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object' && fn.then && fn.catch) {
             var defer = fn;
             fn = function fn(resolve, reject) {
-              defer.then(resolve)['catch'](reject);
+              defer.then(resolve).catch(reject);
             };
           }
           funcGuard(fn);
@@ -6265,18 +6117,11 @@
     axe.utils.queue = queue;
   })();
   'use strict';
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
-    }
-    return _typeof(obj);
-  }
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
   (function(exports) {
     'use strict';
     var messages = {}, subscribers = {}, errorTypes = Object.freeze([ 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError' ]);
@@ -6292,7 +6137,7 @@
       return src;
     }
     function verify(postedMessage) {
-      if (_typeof(postedMessage) === 'object' && typeof postedMessage.uuid === 'string' && postedMessage._respondable === true) {
+      if ((typeof postedMessage === 'undefined' ? 'undefined' : _typeof(postedMessage)) === 'object' && typeof postedMessage.uuid === 'string' && postedMessage._respondable === true) {
         var messageSource = _getSource();
         return postedMessage._source === messageSource || postedMessage._source === 'axeAPI.x.y.z' || messageSource === 'axeAPI.x.y.z';
       }
@@ -6720,50 +6565,31 @@
     return langs;
   };
   'use strict';
-  function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-  }
-  function _nonIterableSpread() {
-    throw new TypeError('Invalid attempt to spread non-iterable instance');
-  }
-  function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === '[object Arguments]') {
-      return Array.from(iter);
+  var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
     }
-  }
-  function _arrayWithoutHoles(arr) {
+    return target;
+  };
+  var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function(obj) {
+    return typeof obj;
+  } : function(obj) {
+    return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
+  };
+  function _toConsumableArray(arr) {
     if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
         arr2[i] = arr[i];
       }
       return arr2;
-    }
-  }
-  function _extends() {
-    _extends = Object.assign || function(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
-      }
-      return target;
-    };
-    return _extends.apply(this, arguments);
-  }
-  function _typeof(obj) {
-    if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
     } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
+      return Array.from(arr);
     }
-    return _typeof(obj);
   }
   axe._load({
     data: {
@@ -6827,10 +6653,6 @@
         'autocomplete-valid': {
           description: 'Ensure the autocomplete attribute is correct and suitable for the form field',
           help: 'autocomplete attribute must be used correctly'
-        },
-        'avoid-inline-spacing': {
-          description: 'Ensure that text spacing set through style attributes can be adjusted with custom stylesheets',
-          help: 'Inline text spacing must be adjustable with custom stylesheets'
         },
         blink: {
           description: 'Ensures <blink> elements are not used',
@@ -7479,19 +7301,6 @@
             },
             fail: function anonymous(it) {
               var out = 'the autocomplete value is inappropriate for this type of input';
-              return out;
-            }
-          }
-        },
-        'avoid-inline-spacing': {
-          impact: 'serious',
-          messages: {
-            pass: function anonymous(it) {
-              var out = 'No inline styles with \'!important\' that affect text spacing has been specified';
-              return out;
-            },
-            fail: function anonymous(it) {
-              var out = 'Remove \'!important\' from inline style' + (it.data && it.data.length > 1 ? 's' : '') + ' ' + it.data.join(', ') + ', as overriding this is not supported by most browsers';
               return out;
             }
           }
@@ -8495,7 +8304,7 @@
         }
       },
       incompleteFallbackMessage: function anonymous(it) {
-        var out = 'axe couldn\'t tell the reason. Time to break out the element inspector!';
+        var out = 'aXe couldn\'t tell the reason. Time to break out the element inspector!';
         return out;
       }
     },
@@ -8520,7 +8329,7 @@
       matches: function matches(node, virtualNode, context) {
         var aria = /^aria-/;
         if (node.hasAttributes()) {
-          var attrs = axe.utils.getNodeAttributes(node);
+          var attrs = node.attributes;
           for (var i = 0, l = attrs.length; i < l; i++) {
             if (aria.test(attrs[i].name)) {
               return true;
@@ -8590,7 +8399,7 @@
         return shouldMatchElement(getComposedParent(node));
       },
       excludeHidden: false,
-      tags: [ 'cat.name-role-value', 'wcag2a', 'wcag412', 'wcag131' ],
+      tags: [ 'cat.name-role-value', 'wcag2a', 'wcag412' ],
       all: [ 'focusable-disabled', 'focusable-not-tabbable' ],
       any: [],
       none: []
@@ -8632,7 +8441,7 @@
       matches: function matches(node, virtualNode, context) {
         var aria = /^aria-/;
         if (node.hasAttributes()) {
-          var attrs = axe.utils.getNodeAttributes(node);
+          var attrs = node.attributes;
           for (var i = 0, l = attrs.length; i < l; i++) {
             if (aria.test(attrs[i].name)) {
               return true;
@@ -8653,7 +8462,7 @@
       matches: function matches(node, virtualNode, context) {
         var aria = /^aria-/;
         if (node.hasAttributes()) {
-          var attrs = axe.utils.getNodeAttributes(node);
+          var attrs = node.attributes;
           for (var i = 0, l = attrs.length; i < l; i++) {
             if (aria.test(attrs[i].name)) {
               return true;
@@ -8713,13 +8522,6 @@
       },
       tags: [ 'cat.forms', 'wcag21aa', 'wcag135' ],
       all: [ 'autocomplete-valid', 'autocomplete-appropriate' ],
-      any: [],
-      none: []
-    }, {
-      id: 'avoid-inline-spacing',
-      selector: '[style]',
-      tags: [ 'wcag21', 'wcag1412' ],
-      all: [ 'avoid-inline-spacing' ],
       any: [],
       none: []
     }, {
@@ -8877,7 +8679,7 @@
       matches: function matches(node, virtualNode, context) {
         var _axe$commons2 = axe.commons, dom = _axe$commons2.dom, aria = _axe$commons2.aria;
         var id = node.getAttribute('id').trim();
-        var idSelector = '*[id="'.concat(axe.utils.escapeSelector(id), '"]');
+        var idSelector = '*[id="' + axe.utils.escapeSelector(id) + '"]';
         var idMatchingElms = Array.from(dom.getRootNode(node).querySelectorAll(idSelector));
         return idMatchingElms.some(dom.isFocusable) && !aria.isAccessibleRef(node);
       },
@@ -8903,7 +8705,7 @@
       matches: function matches(node, virtualNode, context) {
         var _axe$commons3 = axe.commons, dom = _axe$commons3.dom, aria = _axe$commons3.aria;
         var id = node.getAttribute('id').trim();
-        var idSelector = '*[id="'.concat(axe.utils.escapeSelector(id), '"]');
+        var idSelector = '*[id="' + axe.utils.escapeSelector(id) + '"]';
         var idMatchingElms = Array.from(dom.getRootNode(node).querySelectorAll(idSelector));
         return idMatchingElms.every(function(elm) {
           return !dom.isFocusable(elm);
@@ -8918,7 +8720,7 @@
       id: 'empty-heading',
       selector: 'h1, h2, h3, h4, h5, h6, [role="heading"]',
       matches: function matches(node, virtualNode, context) {
-        var explicitRoles;
+        var explicitRoles = void 0;
         if (node.hasAttribute('role')) {
           explicitRoles = node.getAttribute('role').split(/\s+/i).filter(axe.commons.aria.isValidRole);
         }
@@ -8996,7 +8798,7 @@
       id: 'heading-order',
       selector: 'h1, h2, h3, h4, h5, h6, [role=heading]',
       matches: function matches(node, virtualNode, context) {
-        var explicitRoles;
+        var explicitRoles = void 0;
         if (node.hasAttribute('role')) {
           explicitRoles = node.getAttribute('role').split(/\s+/i).filter(axe.commons.aria.isValidRole);
         }
@@ -9021,9 +8823,6 @@
     }, {
       id: 'html-has-lang',
       selector: 'html',
-      matches: function matches(node, virtualNode, context) {
-        return node.ownerDocument.defaultView.self === node.ownerDocument.defaultView.top;
-      },
       tags: [ 'cat.language', 'wcag2a', 'wcag311' ],
       all: [],
       any: [ 'has-lang' ],
@@ -9495,7 +9294,7 @@
       evaluate: function evaluate(node, options, virtualNode, context) {
         options = options || {};
         var invalid = [];
-        var attr, attrName, allowed, role = node.getAttribute('role'), attrs = axe.utils.getNodeAttributes(node);
+        var attr, attrName, allowed, role = node.getAttribute('role'), attrs = node.attributes;
         if (!role) {
           role = axe.commons.aria.implicitRole(node);
         }
@@ -9522,7 +9321,7 @@
       id: 'aria-allowed-role',
       evaluate: function evaluate(node, options, virtualNode, context) {
         var dom = axe.commons.dom;
-        var _ref = options || {}, _ref$allowImplicit = _ref.allowImplicit, allowImplicit = _ref$allowImplicit === void 0 ? true : _ref$allowImplicit, _ref$ignoredTags = _ref.ignoredTags, ignoredTags = _ref$ignoredTags === void 0 ? [] : _ref$ignoredTags;
+        var _ref = options || {}, _ref$allowImplicit = _ref.allowImplicit, allowImplicit = _ref$allowImplicit === undefined ? true : _ref$allowImplicit, _ref$ignoredTags = _ref.ignoredTags, ignoredTags = _ref$ignoredTags === undefined ? [] : _ref$ignoredTags;
         var tagName = node.nodeName.toUpperCase();
         if (ignoredTags.map(function(t) {
           return t.toUpperCase();
@@ -9750,7 +9549,7 @@
             if (element.getAttribute('id')) {
               var id = axe.utils.escapeSelector(element.getAttribute('id'));
               var doc = axe.commons.dom.getRootNode(element);
-              o = doc.querySelector('[aria-owns~='.concat(id, ']'));
+              o = doc.querySelector('[aria-owns~=' + id + ']');
               if (o) {
                 owners.push(o);
               }
@@ -9781,14 +9580,14 @@
         var nodeName = node.nodeName.toUpperCase();
         var lookupTable = axe.commons.aria.lookupTable;
         var role = axe.commons.aria.getRole(node);
-        var unsupportedAttrs = Array.from(axe.utils.getNodeAttributes(node)).filter(function(_ref2) {
+        var unsupportedAttrs = Array.from(node.attributes).filter(function(_ref2) {
           var name = _ref2.name;
           var attribute = lookupTable.attributes[name];
           if (!axe.commons.aria.validateAttr(name)) {
             return false;
           }
           var unsupported = attribute.unsupported;
-          if (_typeof(unsupported) !== 'object') {
+          if ((typeof unsupported === 'undefined' ? 'undefined' : _typeof(unsupported)) !== 'object') {
             return !!unsupported;
           }
           var isException = axe.commons.matches(node, unsupported.exceptions);
@@ -9819,7 +9618,7 @@
       evaluate: function evaluate(node, options, virtualNode, context) {
         options = Array.isArray(options) ? options : [];
         var invalid = [], aria = /^aria-/;
-        var attr, attrName, attrs = axe.utils.getNodeAttributes(node);
+        var attr, attrName, attrs = node.attributes;
         var skipAttrs = [ 'aria-errormessage' ];
         for (var i = 0, l = attrs.length; i < l; i++) {
           attr = attrs[i];
@@ -9842,7 +9641,7 @@
       evaluate: function evaluate(node, options, virtualNode, context) {
         options = Array.isArray(options) ? options : [];
         var invalid = [], aria = /^aria-/;
-        var attr, attrs = axe.utils.getNodeAttributes(node);
+        var attr, attrs = node.attributes;
         for (var i = 0, l = attrs.length; i < l; i++) {
           attr = attrs[i].name;
           if (options.indexOf(attr) === -1 && aria.test(attr) && !axe.commons.aria.validateAttr(attr)) {
@@ -9910,7 +9709,7 @@
         var bold = [ 'bold', 'bolder', '600', '700', '800', '900' ].indexOf(fontWeight) !== -1;
         var cr = color.hasValidContrastRatio(bgColor, fgColor, fontSize, bold);
         var truncatedResult = Math.floor(cr.contrastRatio * 100) / 100;
-        var missing;
+        var missing = void 0;
         if (bgColor === null) {
           missing = color.incompleteData.get('bgColor');
         }
@@ -9987,7 +9786,7 @@
           nodeColor = color.getBackgroundColor(node);
           parentColor = color.getBackgroundColor(parentBlock);
           if (!nodeColor || !parentColor || getContrast(nodeColor, parentColor) >= 3) {
-            var reason;
+            var reason = void 0;
             if (!nodeColor || !parentColor) {
               reason = axe.commons.color.incompleteData.get('bgColor');
             } else {
@@ -10029,7 +9828,7 @@
           photo: url,
           impp: url
         };
-        if (_typeof(options) === 'object') {
+        if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
           Object.keys(options).forEach(function(key) {
             if (!allowedTypesMap[key]) {
               allowedTypesMap[key] = [];
@@ -10174,7 +9973,7 @@
           name: node.name,
           type: node.type
         };
-        var matchingNodes = Array.from(doc.querySelectorAll('input[type="'.concat(type, '"][name="').concat(name, '"]')));
+        var matchingNodes = Array.from(doc.querySelectorAll('input[type="' + type + '"][name="' + name + '"]'));
         if (matchingNodes.length <= 1) {
           this.data(data);
           return true;
@@ -10473,7 +10272,7 @@
         if (node.getAttribute('id')) {
           var root = axe.commons.dom.getRootNode(node);
           var id = axe.utils.escapeSelector(node.getAttribute('id'));
-          var label = root.querySelector('label[for="'.concat(id, '"]'));
+          var label = root.querySelector('label[for="' + id + '"]');
           if (label) {
             if (!axe.commons.dom.isVisible(label)) {
               return true;
@@ -10509,7 +10308,7 @@
         if (node.getAttribute('id')) {
           var root = axe.commons.dom.getRootNode(node);
           var id = axe.utils.escapeSelector(node.getAttribute('id'));
-          var label = root.querySelector('label[for="'.concat(id, '"]'));
+          var label = root.querySelector('label[for="' + id + '"]');
           if (label && !axe.commons.dom.isVisible(label, true)) {
             var name = axe.commons.text.accessibleTextVirtual(virtualNode).trim();
             var isNameEmpty = name === '';
@@ -10567,7 +10366,7 @@
       id: 'multiple-label',
       evaluate: function evaluate(node, options, virtualNode, context) {
         var id = axe.utils.escapeSelector(node.getAttribute('id'));
-        var labels = Array.from(document.querySelectorAll('label[for="'.concat(id, '"]')));
+        var labels = Array.from(document.querySelectorAll('label[for="' + id + '"]'));
         var parent = node.parentNode;
         if (labels.length) {
           labels = labels.filter(function(label, index) {
@@ -10825,7 +10624,7 @@
     }, {
       id: 'css-orientation-lock',
       evaluate: function evaluate(node, options, virtualNode, context) {
-        var _ref10 = context || {}, _ref10$cssom = _ref10.cssom, cssom = _ref10$cssom === void 0 ? undefined : _ref10$cssom;
+        var _ref10 = context || {}, _ref10$cssom = _ref10.cssom, cssom = _ref10$cssom === undefined ? undefined : _ref10$cssom;
         if (!cssom || !cssom.length) {
           return undefined;
         }
@@ -11196,7 +10995,7 @@
           return true;
         }
         var root = axe.commons.dom.getRootNode(node);
-        var matchingNodes = Array.from(root.querySelectorAll('[id="'.concat(axe.utils.escapeSelector(id), '"]'))).filter(function(foundNode) {
+        var matchingNodes = Array.from(root.querySelectorAll('[id="' + axe.utils.escapeSelector(id) + '"]')).filter(function(foundNode) {
           return foundNode !== node;
         });
         if (matchingNodes.length) {
@@ -11223,7 +11022,7 @@
           return true;
         }
         var root = axe.commons.dom.getRootNode(node);
-        var matchingNodes = Array.from(root.querySelectorAll('[id="'.concat(axe.utils.escapeSelector(id), '"]'))).filter(function(foundNode) {
+        var matchingNodes = Array.from(root.querySelectorAll('[id="' + axe.utils.escapeSelector(id) + '"]')).filter(function(foundNode) {
           return foundNode !== node;
         });
         if (matchingNodes.length) {
@@ -11250,7 +11049,7 @@
           return true;
         }
         var root = axe.commons.dom.getRootNode(node);
-        var matchingNodes = Array.from(root.querySelectorAll('[id="'.concat(axe.utils.escapeSelector(id), '"]'))).filter(function(foundNode) {
+        var matchingNodes = Array.from(root.querySelectorAll('[id="' + axe.utils.escapeSelector(id) + '"]')).filter(function(foundNode) {
           return foundNode !== node;
         });
         if (matchingNodes.length) {
@@ -11282,26 +11081,11 @@
         return !!text.sanitize(aria.arialabelledbyText(node));
       }
     }, {
-      id: 'avoid-inline-spacing',
-      evaluate: function evaluate(node, options, virtualNode, context) {
-        var inlineSpacingCssProperties = [ 'line-height', 'letter-spacing', 'word-spacing' ];
-        var overriddenProperties = inlineSpacingCssProperties.filter(function(property) {
-          if (node.style.getPropertyPriority(property) === 'important') {
-            return property;
-          }
-        });
-        if (overriddenProperties.length > 0) {
-          this.data(overriddenProperties);
-          return false;
-        }
-        return true;
-      }
-    }, {
       id: 'button-has-visible-text',
       evaluate: function evaluate(node, options, virtualNode, context) {
         var nodeName = node.nodeName.toUpperCase();
         var role = node.getAttribute('role');
-        var label;
+        var label = void 0;
         if (nodeName === 'BUTTON' || role === 'button' && nodeName !== 'INPUT') {
           label = axe.commons.text.accessibleTextVirtual(virtualNode);
           this.data(label);
@@ -12866,7 +12650,8 @@
         radio: {
           type: 'widget',
           attributes: {
-            allowed: [ 'aria-selected', 'aria-posinset', 'aria-setsize', 'aria-required', 'aria-errormessage', 'aria-checked' ]
+            allowed: [ 'aria-selected', 'aria-posinset', 'aria-setsize', 'aria-required', 'aria-errormessage' ],
+            required: [ 'aria-checked' ]
           },
           owned: null,
           nameFrom: [ 'author', 'contents' ],
@@ -12942,7 +12727,7 @@
             all: [ 'row' ]
           },
           nameFrom: [ 'author', 'contents' ],
-          context: [ 'grid', 'table', 'treegrid' ],
+          context: [ 'grid', 'table' ],
           implicit: [ 'tbody', 'thead', 'tfoot' ],
           unsupported: false
         },
@@ -13435,7 +13220,7 @@
           if (!accessibleName) {
             return accessibleNameAdd;
           } else {
-            return ''.concat(accessibleName, ' ').concat(accessibleNameAdd);
+            return accessibleName + ' ' + accessibleNameAdd;
           }
         }, '');
       };
@@ -13462,7 +13247,7 @@
         }
         if (node.hasAttributeNS('http://www.idpf.org/2007/ops', 'type')) {
           var epubRoles = axe.utils.tokenList(node.getAttributeNS('http://www.idpf.org/2007/ops', 'type').toLowerCase()).map(function(role) {
-            return 'doc-'.concat(role);
+            return 'doc-' + role;
           });
           roles = roles.concat(epubRoles);
         }
@@ -13593,7 +13378,7 @@
       };
       aria.labelVirtual = function(_ref25) {
         var actualNode = _ref25.actualNode;
-        var ref, candidate;
+        var ref = void 0, candidate = void 0;
         if (actualNode.getAttribute('aria-labelledby')) {
           ref = dom.idrefs(actualNode, 'aria-labelledby');
           candidate = ref.map(function(thing) {
@@ -13634,7 +13419,7 @@
         return !roleDef || [ 'presentation', 'none' ].includes(role);
       };
       aria.isValidRole = function(role) {
-        var _ref27 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {}, allowAbstract = _ref27.allowAbstract, _ref27$flagUnsupporte = _ref27.flagUnsupported, flagUnsupported = _ref27$flagUnsupporte === void 0 ? false : _ref27$flagUnsupporte;
+        var _ref27 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {}, allowAbstract = _ref27.allowAbstract, _ref27$flagUnsupporte = _ref27.flagUnsupported, flagUnsupported = _ref27$flagUnsupporte === undefined ? false : _ref27$flagUnsupporte;
         var roleDefinition = aria.lookupTable.role[role];
         var isRoleUnsupported = roleDefinition ? roleDefinition.unsupported : false;
         if (!roleDefinition || flagUnsupported && isRoleUnsupported) {
@@ -13722,7 +13507,7 @@
         if (!availableImplicitRoles.length) {
           return null;
         }
-        var nodeAttributes = axe.utils.getNodeAttributes(node);
+        var nodeAttributes = node.attributes;
         var ariaAttributes = [];
         for (var i = 0, j = nodeAttributes.length; i < j; i++) {
           var attr = nodeAttributes[i];
@@ -13984,7 +13769,7 @@
         return bgNodes;
       }
       color.getCoords = function(rect) {
-        var x, y;
+        var x = void 0, y = void 0;
         if (rect.left > window.innerWidth) {
           return;
         }
@@ -14030,7 +13815,7 @@
           return rectStack[0];
         } else if (rectStack && rectStack.length > 1) {
           var boundingStack = rectStack.shift();
-          var isSame;
+          var isSame = void 0;
           rectStack.forEach(function(rectList, index) {
             if (index === 0) {
               return;
@@ -14156,8 +13941,8 @@
         return finalElements;
       };
       dom.findElmsInContext = function(_ref28) {
-        var context = _ref28.context, value = _ref28.value, attr = _ref28.attr, _ref28$elm = _ref28.elm, elm = _ref28$elm === void 0 ? '' : _ref28$elm;
-        var root;
+        var context = _ref28.context, value = _ref28.value, attr = _ref28.attr, _ref28$elm = _ref28.elm, elm = _ref28$elm === undefined ? '' : _ref28$elm;
+        var root = void 0;
         var escapedValue = axe.utils.escapeSelector(value);
         if (context.nodeType === 9 || context.nodeType === 11) {
           root = context;
@@ -14170,7 +13955,7 @@
         return dom.findUpVirtual(axe.utils.getNodeFromTree(axe._tree[0], element), target);
       };
       dom.findUpVirtual = function(element, target) {
-        var parent;
+        var parent = void 0;
         parent = element.actualNode;
         if (!element.shadowId && typeof element.actualNode.closest === 'function') {
           var match = element.actualNode.closest(target);
@@ -14440,7 +14225,7 @@
             } else {
               inBrBlock = 2;
             }
-          } else if (currNode.style.display === 'none' || currNode.style.overflow === 'hidden' || ![ '', null, 'none' ].includes(currNode.style['float']) || ![ '', null, 'relative' ].includes(currNode.style.position)) {
+          } else if (currNode.style.display === 'none' || currNode.style.overflow === 'hidden' || ![ '', null, 'none' ].includes(currNode.style.float) || ![ '', null, 'relative' ].includes(currNode.style.position)) {
             return false;
           } else if (nodeName === 'A' && currNode.href || (currNode.getAttribute('role') || '').toLowerCase() === 'link') {
             if (currNode === node) {
@@ -14472,7 +14257,7 @@
         return true;
       }
       dom.isOffscreen = function(element) {
-        var leftBoundary;
+        var leftBoundary = void 0;
         var docElement = document.documentElement;
         var styl = window.getComputedStyle(element);
         var dir = window.getComputedStyle(document.body || docElement).getPropertyValue('direction');
@@ -14648,7 +14433,7 @@
         }
         return Object.keys(definition).every(function(matcherName) {
           if (!matchers.includes(matcherName)) {
-            throw new Error('Unknown matcher type "'.concat(matcherName, '"'));
+            throw new Error('Unknown matcher type "' + matcherName + '"');
           }
           var matchMethod = matches[matcherName];
           var matcher = definition[matcherName];
@@ -14656,7 +14441,7 @@
         });
       };
       matches.fromFunction = function matchFromFunction(getValue, matcher) {
-        var matcherType = _typeof(matcher);
+        var matcherType = typeof matcher === 'undefined' ? 'undefined' : _typeof(matcher);
         if (matcherType !== 'object' || Array.isArray(matcher) || matcher instanceof RegExp) {
           throw new Error('Expect matcher to be an object');
         }
@@ -14665,7 +14450,7 @@
         });
       };
       matches.fromPrimative = function matchFromPrimative(someString, matcher) {
-        var matcherType = _typeof(matcher);
+        var matcherType = typeof matcher === 'undefined' ? 'undefined' : _typeof(matcher);
         if (Array.isArray(matcher) && typeof someString !== 'undefined') {
           return matcher.includes(someString);
         }
@@ -14677,7 +14462,7 @@
         }
         return matcher === someString;
       };
-      var isXHTMLGlobal;
+      var isXHTMLGlobal = void 0;
       matches.nodeName = function matchNodeName(node, matcher) {
         var _ref30 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {}, isXHTML = _ref30.isXHTML;
         node = node.actualNode || node;
@@ -14892,7 +14677,7 @@
         }
         if (cell.getAttribute('id')) {
           var id = axe.utils.escapeSelector(cell.getAttribute('id'));
-          return !!document.querySelector('[headers~="'.concat(id, '"]'));
+          return !!document.querySelector('[headers~="' + id + '"]');
         }
         return false;
       };
@@ -15131,7 +14916,7 @@
         var role = aria.getRole(actualNode, {
           noImplicit: true
         });
-        var listbox;
+        var listbox = void 0;
         if (!role === 'combobox') {
           return '';
         }
@@ -15176,7 +14961,7 @@
       };
       text.autocomplete = autocomplete;
       text.isValidAutocomplete = function isValidAutocomplete(autocomplete) {
-        var _ref33 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {}, _ref33$looseTyped = _ref33.looseTyped, looseTyped = _ref33$looseTyped === void 0 ? false : _ref33$looseTyped, _ref33$stateTerms = _ref33.stateTerms, stateTerms = _ref33$stateTerms === void 0 ? [] : _ref33$stateTerms, _ref33$locations = _ref33.locations, locations = _ref33$locations === void 0 ? [] : _ref33$locations, _ref33$qualifiers = _ref33.qualifiers, qualifiers = _ref33$qualifiers === void 0 ? [] : _ref33$qualifiers, _ref33$standaloneTerm = _ref33.standaloneTerms, standaloneTerms = _ref33$standaloneTerm === void 0 ? [] : _ref33$standaloneTerm, _ref33$qualifiedTerms = _ref33.qualifiedTerms, qualifiedTerms = _ref33$qualifiedTerms === void 0 ? [] : _ref33$qualifiedTerms;
+        var _ref33 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {}, _ref33$looseTyped = _ref33.looseTyped, looseTyped = _ref33$looseTyped === undefined ? false : _ref33$looseTyped, _ref33$stateTerms = _ref33.stateTerms, stateTerms = _ref33$stateTerms === undefined ? [] : _ref33$stateTerms, _ref33$locations = _ref33.locations, locations = _ref33$locations === undefined ? [] : _ref33$locations, _ref33$qualifiers = _ref33.qualifiers, qualifiers = _ref33$qualifiers === undefined ? [] : _ref33$qualifiers, _ref33$standaloneTerm = _ref33.standaloneTerms, standaloneTerms = _ref33$standaloneTerm === undefined ? [] : _ref33$standaloneTerm, _ref33$qualifiedTerms = _ref33.qualifiedTerms, qualifiedTerms = _ref33$qualifiedTerms === undefined ? [] : _ref33$qualifiedTerms;
         autocomplete = autocomplete.toLowerCase().trim();
         stateTerms = stateTerms.concat(text.autocomplete.stateTerms);
         if (stateTerms.includes(autocomplete) || autocomplete === '') {
@@ -15219,7 +15004,7 @@
         }, context);
         var explicitLabels = getExplicitLabels(virtualNode);
         var implicitLabel = dom.findUpVirtual(virtualNode, 'label');
-        var labels;
+        var labels = void 0;
         if (implicitLabel) {
           labels = [].concat(_toConsumableArray(explicitLabels), [ implicitLabel ]);
           labels.sort(axe.utils.nodeSorter);
