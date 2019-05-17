@@ -38,6 +38,8 @@ class CkeditorAxe extends PluginBase implements CKEditorPluginInterface, CKEdito
   public function getLibraries(Editor $editor) {
     return [
       'ckeditor_axe/axe',
+      'core/jquery.joyride',
+      'core/drupalSettings',
     ];
   }
 
