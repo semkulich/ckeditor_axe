@@ -1,4 +1,4 @@
 axe:
   js:
-    js/axe.js:
+    assets/vendor/axe-core/axe.min.js:
       minified: true
