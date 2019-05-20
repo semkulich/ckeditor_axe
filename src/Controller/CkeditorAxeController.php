@@ -34,7 +34,7 @@ class CkeditorAxeController extends ControllerBase {
       }
     }
 
-    $content = '<ul id="joyRideTipContent" class="visually-hidden">' . $results . '</ul>';
+    $content = '<ul id="joyRideTipContent">' . $results . '</ul>';
     $response['data'] = $content;
     $response['method'] = 'POST';
     return new JsonResponse($response);

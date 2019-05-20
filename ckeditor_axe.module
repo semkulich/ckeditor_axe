@@ -21,19 +21,3 @@ function ckeditor_axe_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
-
-/**
- * Implements hook_theme().
- */
-function ckeditor_axe_theme($existing, $type, $theme, $path) {
-  return [
-    'ckeditor_axe' => [
-      'variables' => [
-        'selector' => 'body',
-        'label' => NULL,
-        'body' => NULL,
-        'progress' => NULL,
-        ],
-    ],
-  ];
-}
