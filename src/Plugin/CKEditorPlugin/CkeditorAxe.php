@@ -2,7 +2,10 @@
 
 namespace Drupal\ckeditor_axe\Plugin\CKEditorPlugin;
 
-use Drupal\ckeditor\CKEditorPluginInterface;
+use Drupal\ckeditor\CKEditorPluginBase;
+use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
+use Drupal\ckeditor\CKEditorPluginContextualInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
@@ -12,24 +15,17 @@ use Drupal\editor\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "ckeditor_axe",
- *   label = @Translation("ckeditor axe"),
+ *   label = @Translation("Ckeditor AXE"),
  *   module = "ckeditor_axe"
  * )
  */
-class CkeditorAxe extends PluginBase implements CKEditorPluginInterface, CKEditorPluginButtonsInterface {
+class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface, CKEditorPluginButtonsInterface {
 
   /**
    * {@inheritdoc}
    */
   public function getFile() {
     return drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/ckeditor_axe/plugin.js';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDependencies(Editor $editor) {
-    return [];
   }
 
   /**
@@ -46,8 +42,15 @@ class CkeditorAxe extends PluginBase implements CKEditorPluginInterface, CKEdito
   /**
    * {@inheritdoc}
    */
-  public function isInternal() {
-    return FALSE;
+  public function getConfig(Editor $editor) {
+    $settings = $editor->getSettings()['plugins']['ckeditor_axe'];
+
+    $config['ckeditor_axe'] = [];
+    foreach ($this->options() as $option => $description) {
+      $config['ckeditor_axe'][$option] = isset($settings['options'][$option]) ? $settings['options'][$option] : TRUE;
+    }
+
+    return $config;
   }
 
   /**
@@ -63,16 +66,48 @@ class CkeditorAxe extends PluginBase implements CKEditorPluginInterface, CKEdito
   }
 
   /**
-   * {@inheritdoc}
+   * Additional settings options.
+   *
+   * @return array
+   *   An array of settings options and their descriptions.
    */
-  public function isEnabled(Editor $editor) {
+  public function options() {
+    return [
+      'wcag2a' => 'WCAG 2.0 Level A',
+      'wcag2aa' => 'WCAG 2.0 Level AA',
+      'wcag21aa' => 'WCAG 2.1 Level AA',
+      'section508' => 'Section 508',
+      'best_practice' => 'Best practices endorsed by Deque',
+      'experimental' => 'Cutting-edge techniques',
+      'cat' => 'Category mappings used by Deque',
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfig(Editor $editor) {
-    return [];
+  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
+    $editor_settings = $editor->getSettings();
+    if (isset($editor_settings['plugins']['ckeditor_axe'])) {
+      $settings = $editor_settings['plugins']['ckeditor_axe'];
+    }
+
+    $form['#attached']['library'][] = 'ckeditor_axe/ckeditor_axe.admin  ';
+
+    $form['label'] = [
+      '#type' => 'label',
+      '#title' => t('Accessibility Standard/Purpose'),
+    ];
+
+    foreach ($this->options() as $setting => $description) {
+      $form['options'][$setting] = [
+        '#type' => 'checkbox',
+        '#title' => $description,
+        '#default_value' => isset($settings['options'][$setting]) ? $settings['options'][$setting] : TRUE,
+      ];
+    }
+
+    return $form;
   }
 
 }

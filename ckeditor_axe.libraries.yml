@@ -2,3 +2,14 @@ axe:
   js:
     assets/vendor/axe-core/axe.min.js:
       minified: true
+
+ckeditor_axe.admin:
+  version: 1.x
+  js:
+    js/ckeditor_axe.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.vertical-tabs
+    - core/drupalSettings

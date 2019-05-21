@@ -10,6 +10,7 @@
       
       // Define the function that will be fired when the command is executed.
         exec: function (editor) {
+          console.log(CKEDITOR.plugins);
           let instanseName = CKEDITOR.currentInstance.name;
           // let data = CKEDITOR.instances[instanseName].document.getBody().getHtml();
           let data = CKEDITOR.instances[instanseName].getData();
