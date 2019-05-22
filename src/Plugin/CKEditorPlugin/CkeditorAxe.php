@@ -2,9 +2,14 @@
 
 namespace Drupal\ckeditor_axe\Plugin\CKEditorPlugin;
 
+<<<<<<< Updated upstream
 use Drupal\ckeditor\CKEditorPluginInterface;
+=======
+use Drupal\ckeditor\CKEditorPluginBase;
+use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
+use Drupal\Core\Form\FormStateInterface;
+>>>>>>> Stashed changes
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
 
 /**
