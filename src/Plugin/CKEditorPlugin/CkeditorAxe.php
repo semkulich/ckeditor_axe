@@ -42,7 +42,6 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     $settings = $editor->getSettings()['plugins']['ckeditor_axe'];
-
     $config['ckeditor_axe'] = [];
     foreach ($this->options() as $option => $description) {
       $config['ckeditor_axe'][$option] = isset($settings['options'][$option]) ? $settings['options'][$option] : TRUE;

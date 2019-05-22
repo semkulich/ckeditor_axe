@@ -11,6 +11,7 @@
         exec: function (editor) {
           // Get ckeditor AXE config.
           let axeTags = Object.keys(editor.config.ckeditor_axe);
+          let axeExcludedRules = Object.keys(editor.config.ckeditor_axe);
           let instanseName = CKEDITOR.currentInstance.name;
           // let data = CKEDITOR.instances[instanseName].document.getBody().getHtml();
           let data = CKEDITOR.instances[instanseName].getData();
@@ -23,6 +24,10 @@
               runOnly: {
                 type: "tag",
                 values: axeTags,
+              },
+              "rules": {
+                "color-contrast": { enabled: true },
+                "valid-lang": { enabled: false }
               }
             },
             function(err, results) {
