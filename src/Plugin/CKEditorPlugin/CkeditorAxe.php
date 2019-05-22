@@ -77,9 +77,8 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
       'wcag2aa' => 'WCAG 2.0 Level AA',
       'wcag21aa' => 'WCAG 2.1 Level AA',
       'section508' => 'Section 508',
-      'best_practice' => 'Best practices endorsed by Deque',
+      'best-practice' => 'Best practices endorsed by Deque',
       'experimental' => 'Cutting-edge techniques',
-      'cat' => 'Category mappings used by Deque',
     ];
   }
 
@@ -91,8 +90,6 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
     if (isset($editor_settings['plugins']['ckeditor_axe'])) {
       $settings = $editor_settings['plugins']['ckeditor_axe'];
     }
-
-    $form['#attached']['library'][] = 'ckeditor_axe/ckeditor_axe.admin  ';
 
     $form['label'] = [
       '#type' => 'label',

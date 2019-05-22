@@ -7,10 +7,10 @@
     init: function (editor) {
       // Define the editor command.
       editor.addCommand('ckeditor_axe', {
-      
       // Define the function that will be fired when the command is executed.
         exec: function (editor) {
-          console.log(CKEDITOR.plugins);
+          // Get ckeditor AXE config.
+          let axeTags = Object.keys(editor.config.ckeditor_axe);
           let instanseName = CKEDITOR.currentInstance.name;
           // let data = CKEDITOR.instances[instanseName].document.getBody().getHtml();
           let data = CKEDITOR.instances[instanseName].getData();
@@ -21,8 +21,8 @@
           axe.run(el,
             {
               runOnly: {
-                type: "rule",
-                values: [ "image-alt"]
+                type: "tag",
+                values: axeTags,
               }
             },
             function(err, results) {
