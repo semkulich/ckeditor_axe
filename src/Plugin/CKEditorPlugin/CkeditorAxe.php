@@ -37,16 +37,23 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
     ];
   }
 
+
   /**
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
-    $settings = $editor->getSettings()['plugins']['ckeditor_axe'];
+    $editor_settings = $editor->getSettings();
+    $settings = $editor_settings['plugins']['ckeditor_axe'];
     $config['ckeditor_axe'] = [];
     foreach ($this->options() as $option => $description) {
-      $config['ckeditor_axe'][$option] = isset($settings['options'][$option]) ? $settings['options'][$option] : TRUE;
+      if (isset($settings['options'][$option]) && $settings['options'][$option]) {
+        $config['ckeditor_axe']['tags'][] = $option;
+      }
     }
-
+    // Add excluded rules to editor.
+    foreach ($this->excludedRules() as $rule) {
+      $config['ckeditor_axe']['excluded_rules'][$rule] = isset($settings['excluded_rules'][$rule]) ? $settings['excluded_rules'][$rule] : ['enabled' => FALSE];
+    }
     return $config;
   }
 
@@ -80,6 +87,38 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
+   * Additional settings AXE rules.
+   *
+   * @return array
+   *   An array of excluded rules.
+   */
+  protected function excludedRules() {
+    return [
+      'aria-hidden-body',
+      'bypass',
+      'document-title',
+      'frame-tested',
+      'frame-title-unique',
+      'frame-title',
+      'html-has-lang',
+      'html-lang-valid',
+      'html-xml-lang-mismatch',
+      'landmark-banner-is-top-level',
+      'landmark-complementary-is-top-level',
+      'landmark-contentinfo-is-top-level',
+      'landmark-main-is-top-level',
+      'landmark-no-duplicate-banner',
+      'landmark-no-duplicate-contentinfo',
+      'landmark-one-main',
+      'meta-viewport-large',
+      'meta-viewport',
+      'page-has-heading-one',
+      'region',
+      'valid-lang',
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
@@ -93,11 +132,18 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
       '#title' => t('Accessibility Standard/Purpose'),
     ];
 
-    foreach ($this->options() as $setting => $description) {
-      $form['options'][$setting] = [
+    foreach ($this->options() as $option => $description) {
+      $form['options'][$option] = [
         '#type' => 'checkbox',
         '#title' => $description,
-        '#default_value' => isset($settings['options'][$setting]) ? $settings['options'][$setting] : TRUE,
+        '#default_value' => isset($settings['options'][$option]) ? $settings['options'][$option] : TRUE,
+      ];
+    }
+
+    foreach ($this->excludedRules() as $rule) {
+      $form['excluded_rules'][$rule] = [
+        '#type' => 'hidden',
+        '#value' => isset($settings['excluded_rules'][$rule]) ? $settings['excluded_rules'][$rule] : ['enabled' => FALSE],
       ];
     }
 
