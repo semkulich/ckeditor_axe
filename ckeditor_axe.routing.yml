@@ -1,8 +1,0 @@
-# CKeditor Axe endpoints
-ckeditor_axe.post:
-  path: 'ckeditor_axe/post.json'
-  defaults: { _controller: '\Drupal\ckeditor_axe\Controller\CkeditorAxeController::axe_request' }
-  methods:  [POST]
-  requirements:
-    _access: 'TRUE'
-

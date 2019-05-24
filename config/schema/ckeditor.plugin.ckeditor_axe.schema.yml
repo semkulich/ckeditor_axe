@@ -1,11 +1,17 @@
 # Schema for the configuration files of the CKEditor CodeMirror module.
 
-ckeditor.plugin.codemirror:
+ckeditor.plugin.ckeditor_axe:
   type: config_object
   label: 'CKEditor AXE settings'
   mapping:
-    options:
-      type: config_object
+    excluded_rules:
+      type: sequence
+      label: 'Accessibility Excluded Rules'
+      sequence:
+        type: string
+        label: 'Rule'
+    tags:
+      type: mapping
       label: 'Accessibility Standard/Purpose'
       mapping:
         wcag2a:
@@ -20,12 +26,9 @@ ckeditor.plugin.codemirror:
         section508:
           type: boolean
           label: 'Section 508'
-        best_practice:
+        best-practice:
           type: boolean
           label: 'Best practices endorsed by Deque'
         experimental:
           type: boolean
           label: 'Cutting-edge techniques'
-        cat:
-          type: boolean
-          label: 'Category mappings used by Deque'
