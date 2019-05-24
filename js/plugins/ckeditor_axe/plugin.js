@@ -15,14 +15,13 @@
           let axeExcludedRules = axeConfig.excluded_rules;
           let instanseName = CKEDITOR.currentInstance.name;
   
-          // let data = CKEDITOR.instances[instanseName].document.getBody().getHtml();
-          let data = CKEDITOR.instances[instanseName].getData();
+          let data = CKEDITOR.instances[instanseName].document.getBody().getHtml();
+          // let data = CKEDITOR.instances[instanseName].getData();
 
           let parser = new DOMParser();
           let el = parser.parseFromString(data, "text/xml");
-          console.log(el, data);
 
-          axe.run(data,
+          axe.run(el,
             {
               runOnly: {
                 type: "tag",
