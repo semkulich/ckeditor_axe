@@ -1,6 +1,11 @@
 (function ($, Drupal, CKEDITOR) {
   'use strict';
-
+  
+  // CKEDITOR.replace( 'editor', {
+  //   customConfig: '/config.js'
+  // });
+  CKEDITOR.config.customConfig = 'config.js';
+  console.log(CKEDITOR);
   CKEDITOR.plugins.add('ckeditor_axe', {
     icons: 'ckeditor_axe',
     // The plugin initialization logic goes inside this method.
