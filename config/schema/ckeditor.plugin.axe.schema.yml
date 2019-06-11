@@ -1,6 +1,6 @@
 # Schema for the configuration files of the CKEditor CodeMirror module.
 
-ckeditor.plugin.ckeditor_axe:
+ckeditor.plugin.axe:
   type: config_object
   label: 'CKEditor AXE settings'
   mapping:

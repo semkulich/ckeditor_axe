@@ -23,7 +23,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/ckeditor_axe/plugin.js';
+    return drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/axe/plugin.js';
   }
 
   /**
@@ -31,8 +31,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getLibraries(Editor $editor) {
     return [
-      'ckeditor_axe/axe',
-      'core/jquery.joyride',
+      'core/jquery',
       'core/drupalSettings',
     ];
   }
@@ -43,16 +42,16 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     $editor_settings = $editor->getSettings();
-    $settings = $editor_settings['plugins']['ckeditor_axe'];
-    $config['ckeditor_axe'] = [];
+    $settings = $editor_settings['plugins']['axe'];
+    $config['axe'] = [];
     foreach ($this->options() as $option => $description) {
       if (isset($settings['options'][$option]) && $settings['options'][$option]) {
-        $config['ckeditor_axe']['tags'][] = $option;
+        $config['axe']['tags'][] = $option;
       }
     }
     // Add excluded rules to editor.
     foreach ($this->excludedRules() as $rule) {
-      $config['ckeditor_axe']['excluded_rules'][$rule] = isset($settings['excluded_rules'][$rule]) ? $settings['excluded_rules'][$rule] : ['enabled' => FALSE];
+      $config['axe']['excluded_rules'][$rule] = isset($settings['excluded_rules'][$rule]) ? $settings['excluded_rules'][$rule] : ['enabled' => FALSE];
     }
     return $config;
   }
@@ -62,7 +61,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getButtons() {
     return [
-      'ckeditor_axe' => [
+      'axe' => [
         'label' => t('Axe'),
         'image' =>  drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/ckeditor_axe/icons/ckeditor_axe.png',
       ],
@@ -123,8 +122,8 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     $editor_settings = $editor->getSettings();
-    if (isset($editor_settings['plugins']['ckeditor_axe'])) {
-      $settings = $editor_settings['plugins']['ckeditor_axe'];
+    if (isset($editor_settings['plugins']['axe'])) {
+      $settings = $editor_settings['plugins']['axe'];
     }
 
     $form['label'] = [
