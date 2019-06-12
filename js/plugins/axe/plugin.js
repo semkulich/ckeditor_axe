@@ -41,7 +41,7 @@
       editor.ui.addButton("axe", {
         label: lang.name,
         command: "axe",
-        icon: "icons/axe.png",
+        icon: plugin.path + "icons/axe.png",
         // According to other plugins - property "toolbar" should be added by default.
         // @see plugins/about/plugin.js
         toolbar: "others"
@@ -212,7 +212,7 @@
         } else {
           console.error(
           // @todo: Multilanguage.
-          "Can't fin axe.js or axe.min.js file. Please check if they were included.");
+          "Can't find axe.js or axe.min.js file. Please check if they were included.");
         }
         return this._axePath;
       }

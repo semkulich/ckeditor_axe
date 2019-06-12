@@ -1,4 +1,9 @@
-axe:
+axe-core:
+  remote: https://github.com/dequelabs/axe-core
+  version: "3.2.2"
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/dequelabs/axe-core/blob/v3.2.2/LICENSE
+    gpl-compatible: true
   js:
-    assets/vendor/axe-core/axe.min.js:
-      minified: true
+    assets/vendor/axe-core/axe.min.js: { preprocess: false, minified: true }

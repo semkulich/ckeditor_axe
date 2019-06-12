@@ -4,12 +4,6 @@ ckeditor.plugin.axe:
   type: config_object
   label: 'CKEditor AXE settings'
   mapping:
-    excluded_rules:
-      type: sequence
-      label: 'Accessibility Excluded Rules'
-      sequence:
-        type: string
-        label: 'Rule'
     tags:
       type: mapping
       label: 'Accessibility Standard/Purpose'
