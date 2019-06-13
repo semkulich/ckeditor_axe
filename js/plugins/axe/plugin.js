@@ -9,7 +9,11 @@
       var plugin = this;
       // @todo: Multilanguage.
       var lang = editor.lang.axe;
-
+  
+      var runOnlyTags = [];
+  
+      // Set button default command and check if user allowed configuration tags options.
+      var buttonCommand = "axe";
       // Mechanism to override default settings.
       // @todo: It should be tested.
       if (typeof editor.config.axe !== "undefined") {
@@ -17,8 +21,31 @@
         if (typeof editor.config.axe.context !== "undefined") {
           plugin.axe.context = editor.config.axe.context;
         }
+        // Access to dialog window.
+        if (typeof editor.config.axe.dialogAccess !== "undefined") {
+          plugin.axe.dialogAccess = editor.config.axe.dialogAccess;
+          // Add dialog.
+          if (plugin.axe.dialogAccess) {
+            CKEDITOR.dialog.add("axeTagsDialog", this.path + "dialogs/dialog.js");
+            editor.addCommand( "axeTagsDialogCmd", new CKEDITOR.dialogCommand("axeTagsDialog"));
+            buttonCommand = "axeTagsDialogCmd";
+          }
+        }
+        // Tags.
+        if (typeof editor.config.axe.tags === "undefined") {
+          editor.config.axe.tags = {
+            "wcag2a" : 1,
+            "wcag2aa" : 0,
+            "wcag21aa" : 0,
+            "section508" : 0,
+            "best-practice" : 0,
+            "experimental" : 0
+          };
+        }
+        plugin.axe.tags = editor.config.axe.tags;
         // Arguments to run function (including rules which are not allowed.).
         if (typeof editor.config.axe.run !== "undefined") {
+          var tags = plugin.axe.run.rules;
           // There are some rules which can't be overriden.
           var rules = plugin.axe.run.rules;
           plugin.axe.run = editor.config.axe.run || {};
@@ -40,7 +67,7 @@
       // Create the toolbar button that executes the above command.
       editor.ui.addButton("axe", {
         label: lang.name,
-        command: "axe",
+        command: buttonCommand,
         icon: plugin.path + "icons/axe.png",
         // According to other plugins - property "toolbar" should be added by default.
         // @see plugins/about/plugin.js
@@ -63,6 +90,12 @@
         canUndo: false,
         // Define the function that will be fired when the command is executed.
         exec: function exec(editor) {
+          let runOnlyTags = [];
+          Object.keys(plugin.axe.tags).forEach(function (tag) {
+            if(plugin.axe.tags[tag])
+              runOnlyTags.push(tag);
+          });
+          plugin.axe.run.runOnly.values = runOnlyTags;
           // Define callback number.
           if (typeof plugin.axe._func === "undefined") {
             plugin.axe._func = CKEDITOR.tools.addFunction(plugin.axe.callback);
@@ -86,18 +119,21 @@
     /**
      * Section with aXe related settings and functionality.
      *
-     * Here you will see default settings for this plugin. But you will be allowed to override them via CKEDITOR.config.
+     * Here you will see default settings for this plugin. But you will be
+     * allowed to override them via CKEDITOR.config.
      */
     axe: {
       /**
        * Default context is "document".
        *
        * If value of context is undefined - "document" will be used instead.
-       * If you need detailed configuration @see: https://www.deque.com/axe/axe-for-web/documentation/api-documentation/#user-content-api-name-axerun
+       * If you need detailed configuration @see:
+       * https://www.deque.com/axe/axe-for-web/documentation/api-documentation/#user-content-api-name-axerun
        */
       context: undefined,
       /**
-       * Settings section which will be passed into aXe run command as arguments.
+       * Settings section which will be passed into aXe run command as
+       * arguments.
        */
       run: {
         /**
@@ -110,8 +146,10 @@
         /**
          * Rules to exclude from check.
          *
-         * For details @see: https://www.deque.com/axe/axe-for-web/documentation/api-documentation/#user-content-options-parameter-examples
-         * List of rules below are excluded because they are not applicable to CKEditor functionality.
+         * For details @see:
+         * https://www.deque.com/axe/axe-for-web/documentation/api-documentation/#user-content-options-parameter-examples
+         * List of rules below are excluded because they are not applicable to
+         * CKEditor functionality.
          */
         rules: {
           "aria-hidden-body": { enabled: false },
@@ -141,7 +179,8 @@
       /**
        * Callback to catch results of the axe check.
        *
-       * This callback is defined as separate plugin property to provide possibility to override it.
+       * This callback is defined as separate plugin property to provide
+       * possibility to override it.
        *
        * @param {object|undefined} error - aXe error.
        * @param {object} results - aXe results.
@@ -152,7 +191,6 @@
       callback: function callback(error, results, editorName) {
         if (error) throw error;
         console.log(results);
-
         // Validate editor instance.
         if (typeof CKEDITOR.instances[editorName] === "undefined") {
           // @todo: Multilanguage.

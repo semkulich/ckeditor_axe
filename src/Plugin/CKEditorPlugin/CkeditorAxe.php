@@ -78,11 +78,9 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
     $config['axe']['path'] = '/core/modules/ckeditor_axe/assets/vendor/axe-core/axe.min.js';
     // Add Accessibility standards to editor.
     foreach ($this->options() as $option => $description) {
-      if (isset($settings['options'][$option]) && $settings['options'][$option] === 1) {
-        $config['axe']['tags'][] = $option;
-      }
+      $config['axe']['tags'][$option] = isset($settings['options'][$option])  ? $settings['options'][$option] : FALSE;
     }
-    $config['axe']['dialog_access'] = isset($settings['dialog_access']) ? $settings['dialog_access'] : TRUE;
+    $config['axe']['dialogAccess'] = isset($settings['dialog_access']) ? $settings['dialog_access'] : TRUE;
     return $config;
   }
 
