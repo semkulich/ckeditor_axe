@@ -9,9 +9,6 @@
       var plugin = this;
       // @todo: Multilanguage.
       var lang = editor.lang.axe;
-  
-      var runOnlyTags = [];
-  
       // Set button default command and check if user allowed configuration tags options.
       var buttonCommand = "axe";
       // Mechanism to override default settings.

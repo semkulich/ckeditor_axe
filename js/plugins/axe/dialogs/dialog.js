@@ -5,7 +5,6 @@
  */
 
 CKEDITOR.dialog.add( 'axeTagsDialog', function(editor) {
-  let runOnlyTags = [];
   // Axe tags.
   return {
     title: 'Accessibility Standard/Purpose',
