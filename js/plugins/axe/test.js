@@ -2,7 +2,8 @@
 
 // Add extra plugins.
 CKEDITOR.plugins.addExternal("axe", "/axe/", "plugin.js");
-CKEDITOR.config.extraPlugins = "axe,balloonpanel";
+CKEDITOR.plugins.addExternal("a11ychecker", "/test/a11ychecker/", "plugin.js");
+CKEDITOR.config.extraPlugins = "axe,balloonpanel,a11ychecker";
 // Configure our plugin.
 CKEDITOR.config.axe = {};
 CKEDITOR.config.axe.path = "/node_modules/axe-core/axe.js";

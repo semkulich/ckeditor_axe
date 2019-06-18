@@ -1,5 +1,1 @@
-"use strict";
-
-CKEDITOR.plugins.setLang("axe", "en", {
-  name: "aXe"
-});
+"use strict";CKEDITOR.plugins.setLang("axe","en",{name:"aXe"});
