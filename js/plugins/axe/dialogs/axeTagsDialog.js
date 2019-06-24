@@ -50,21 +50,19 @@ CKEDITOR.dialog.add( 'axeTagsDialog', function(editor) {
       }
     ],
     onShow: function () {
+      let tags = editor.config.axe.run.runOnly;
       this.foreach(function (el) {
-        if(editor.config.axe.tags[el.id])
-        el.setValue('checked', 'checked');
+        if(tags.includes(el.id))
+          el.setValue('checked', 'checked');
       });
     },
     onOk: function () {
+      editor.config.axe.run.runOnly = [];
       this.foreach(function (el) {
-        editor.config.axe.tags[el.id] = el.getValue() ? 1 : 0;
+        if(el.getValue())
+          editor.config.axe.run.runOnly.push(el.id);
       });
       editor.execCommand('axe');
-      // Object.keys(tags).forEach(function (tag) {
-      //   if(tags[tag])
-      //     runOnlyTags.push(tag);
-      // });
-      // console.log(this.element);
     },
   };
 } );

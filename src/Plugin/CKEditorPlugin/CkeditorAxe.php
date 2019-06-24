@@ -79,6 +79,9 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
     // Add Accessibility standards to editor.
     foreach ($this->options() as $option => $description) {
       $config['axe']['tags'][$option] = isset($settings['options'][$option])  ? $settings['options'][$option] : FALSE;
+      if (isset($settings['options'][$option]) && $settings['options'][$option]) {
+        $config['axe']['run']['runOnly'][] = $option;
+      }
     }
     $config['axe']['dialogAccess'] = isset($settings['dialog_access']) ? $settings['dialog_access'] : TRUE;
     return $config;
