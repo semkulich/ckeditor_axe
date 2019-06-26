@@ -6,14 +6,15 @@ use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
+use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 
 /**
- * Defines the "ckeditor axe" plugin.
+ * Defines the "axe" plugin.
  *
  * @CKEditorPlugin(
- *   id = "ckeditor_axe",
- *   label = @Translation("Ckeditor AXE"),
+ *   id = "axe",
+ *   label = @Translation("AXE"),
  *   module = "ckeditor_axe"
  * )
  */
@@ -23,7 +24,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/ckeditor_axe/plugin.js';
+    return drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/axe/plugin.js';
   }
 
   /**
@@ -31,30 +32,11 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getLibraries(Editor $editor) {
     return [
-      'ckeditor_axe/axe',
-      'core/jquery.joyride',
+      'core/jquery',
+      'core/jquery.ui',
+      'core/jquery.ui.dialog',
       'core/drupalSettings',
     ];
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfig(Editor $editor) {
-    $editor_settings = $editor->getSettings();
-    $settings = $editor_settings['plugins']['ckeditor_axe'];
-    $config['ckeditor_axe'] = [];
-    foreach ($this->options() as $option => $description) {
-      if (isset($settings['options'][$option]) && $settings['options'][$option]) {
-        $config['ckeditor_axe']['tags'][] = $option;
-      }
-    }
-    // Add excluded rules to editor.
-    foreach ($this->excludedRules() as $rule) {
-      $config['ckeditor_axe']['excluded_rules'][$rule] = isset($settings['excluded_rules'][$rule]) ? $settings['excluded_rules'][$rule] : ['enabled' => FALSE];
-    }
-    return $config;
   }
 
   /**
@@ -62,9 +44,9 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getButtons() {
     return [
-      'ckeditor_axe' => [
+      'axe' => [
         'label' => t('Axe'),
-        'image' =>  drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/ckeditor_axe/icons/ckeditor_axe.png',
+        'image' =>  drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/axe/icons/axe.png',
       ],
     ];
   }
@@ -87,35 +69,22 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
-   * Additional settings AXE rules.
-   *
-   * @return array
-   *   An array of excluded rules.
+   * {@inheritdoc}
    */
-  protected function excludedRules() {
-    return [
-      'aria-hidden-body',
-      'bypass',
-      'document-title',
-      'frame-tested',
-      'frame-title-unique',
-      'frame-title',
-      'html-has-lang',
-      'html-lang-valid',
-      'html-xml-lang-mismatch',
-      'landmark-banner-is-top-level',
-      'landmark-complementary-is-top-level',
-      'landmark-contentinfo-is-top-level',
-      'landmark-main-is-top-level',
-      'landmark-no-duplicate-banner',
-      'landmark-no-duplicate-contentinfo',
-      'landmark-one-main',
-      'meta-viewport-large',
-      'meta-viewport',
-      'page-has-heading-one',
-      'region',
-      'valid-lang',
-    ];
+  public function getConfig(Editor $editor) {
+    $editor_settings = $editor->getSettings();
+    $settings = $editor_settings['plugins']['axe'];
+    $config['axe'] = [];
+    $config['axe']['path'] = '/core/modules/ckeditor_axe/assets/vendor/axe-core/axe.min.js';
+    // Add Accessibility standards to editor.
+    foreach ($this->options() as $option => $description) {
+      $config['axe']['tags'][$option] = isset($settings['options'][$option])  ? $settings['options'][$option] : FALSE;
+      if (isset($settings['options'][$option]) && $settings['options'][$option]) {
+        $config['axe']['run']['runOnly'][] = $option;
+      }
+    }
+    $config['axe']['dialogAccess'] = isset($settings['dialog_access']) ? $settings['dialog_access'] : TRUE;
+    return $config;
   }
 
   /**
@@ -123,30 +92,29 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     $editor_settings = $editor->getSettings();
-    if (isset($editor_settings['plugins']['ckeditor_axe'])) {
-      $settings = $editor_settings['plugins']['ckeditor_axe'];
+    if (isset($editor_settings['plugins']['axe'])) {
+      $settings = $editor_settings['plugins']['axe'];
     }
+    // Add options list with Accessibility Standard/Purpose.
+    $form['dialog_access'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow change Accessibility Standard on dialog window.'),
+      '#default_value' => isset($settings['dialog_access']) ? $settings['dialog_access'] : 1,
+    ];
 
-    $form['label'] = [
-      '#type' => 'label',
-      '#title' => t('Accessibility Standard/Purpose'),
+    $form['options'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Accessibility Standard/Purpose'),
     ];
 
     foreach ($this->options() as $option => $description) {
+      $default_value = $option === 'wcag2a' ? 1 : 0;
       $form['options'][$option] = [
         '#type' => 'checkbox',
         '#title' => $description,
-        '#default_value' => isset($settings['options'][$option]) ? $settings['options'][$option] : TRUE,
+        '#default_value' => isset($settings['options'][$option])  ? $settings['options'][$option] : $default_value,
       ];
     }
-
-    foreach ($this->excludedRules() as $rule) {
-      $form['excluded_rules'][$rule] = [
-        '#type' => 'hidden',
-        '#value' => isset($settings['excluded_rules'][$rule]) ? $settings['excluded_rules'][$rule] : ['enabled' => FALSE],
-      ];
-    }
-
     return $form;
   }
 
