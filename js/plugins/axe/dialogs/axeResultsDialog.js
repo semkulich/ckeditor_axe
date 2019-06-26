@@ -5,12 +5,11 @@
  */
 
 CKEDITOR.dialog.add( 'axeResultsDialog', function(editor) {
-  // Axe tags.
   return {
     title: 'AXE results',
-    resizable: CKEDITOR.DIALOG_RESIZE_BOTH,
-    minWidth: 500,
-    minHeight: 400,
+    // resizable: CKEDITOR.DIALOG_RESIZE_BOTH,
+    width: 200,
+    minHeight: 200,
     contents: [
     
     ],
@@ -19,11 +18,13 @@ CKEDITOR.dialog.add( 'axeResultsDialog', function(editor) {
     //   console.log(this);
     // },
     onLoad: function () {
-      this.foreach(function (el) {
-        // if(tags.includes(el.id))
-        //   el.setValue('checked', 'checked');
-        // console.log(el);
-      });
+      console.log(this.getPosition());
+      this.resize(200, 200);
+      // this.foreach(function (el) {
+      //   // if(tags.includes(el.id))
+      //   //   el.setValue('checked', 'checked');
+      //   // console.log(el);
+      // });
     }
     // onShow: function (data) {
     //   let dialog = this;

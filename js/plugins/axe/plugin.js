@@ -107,77 +107,129 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             let dialogDefinition = ev.data.definition;
             if ( dialogName === 'axeResultsDialog' && ev.editor.name === editorName ) {
               
-              results.violations.forEach(function (violation) {
-  
+              results.violations.forEach(function (violation, vid) {
                 // In case if we have child elements.
                 if (typeof(violation.nodes) === "object") {
                   let count = Object.keys(violation.nodes).length;
+                  // Add pagination helper.
+                  let pagination = function() {
+                    let state = 0;
+                    return {
+                      currNid: function() {
+                        let nid = state;
+                        return nid + 1;
+                      },
+                      nextNid: function() {
+                        state++;
+                        if (state === count)
+                          return this.firstNid();
+                        return state;
+                      },
+                      prevNid: function() {
+                        if (state === 0)
+                          return this.lastNid();
+                        state--;
+                        return state;
+                      },
+                      firstNid: function() {
+                        state = 0;
+                        return state;
+                      },
+                      lastNid: function() {
+                        state = count - 1;
+                        return state;
+                      }
+                    };
+                  }();
   
-                  let nodes = [];
-                  // console.log(count);
-                  let html = '<div class="issue-nav"><div class="issue-nav-title"><h2>Issue description</h2>' + violation.description + '</div></div>';
                   // Go through child elements.
-                  violation.nodes.forEach(function (node, navigatorID) {
+                  let nodes = [];
+                  violation.nodes.forEach(function (node, navId) {
                     if (node.target[0] !== "undefined") {
-                      nodes[navigatorID] = {
+                      nodes[navId] = {
                         selector: editor.document.$.querySelector(node.target[0]),
-                        failureSummary: node.failureSummary
+                        failureSummary: node.failureSummary,
+                        source: node.html
                       }
                     }
                   });
   
                   // Add content.
-                  let dialogLabel = violation.help + "-" + count;
+                  dialogDefinition.width = 200;
+                  let dialog = dialogDefinition.dialog;
+                  let document = dialog.getElement().getDocument();
                   let elements = [];
-  
-                  if (count > 0) {
-                    let nid = 0;
-                    elements.push({
-                      type: 'hbox',
-                      // widths: [ '25%', '25%', '50%' ],
-                      align: 'top',
-                      title: 'aaaaaa',
-                      children: [
-                        {
-                          type: 'html',
-                          id: 'abc',
-                          html: '<div id="nid">' + nid +'</div> of ' + count,
-                        },
-                        {
-                          type: 'button',
-                          id: nid,
-                          label: '<',
-                          title: 'Previous',
-                          align: 'center',
-                          onClick: function() {
-                            nid = (nid === 0) ? count : nid;
-                            nid --;
-                            nodes[nid].selector.scrollIntoView();
+                  elements.push(
+                    {
+                      type: 'html',
+                      html: '<div class="issue-title"><h2>Issue description</h2>' + violation.description + '</div>',
+                    }
+                  );
+                  if (count > 1) {
+                    let nodeCountId = 'nodeCount' + vid;
+                    let nodeSolveId = 'nodeSolve' + vid;
+                    let nodeSourceId = 'nodeSource' + vid;
+                    elements.push(
+                      {
+                        type: 'vbox',
+                        // widths: [ '50%', '15%', '20%', '15%' ],
+                        align: 'right',
+                        width: '200px',
+                        children: [
+                          {
+                            type: 'button',
+                            id: 'prev',
+                            label: '<',
+                            title: 'Previous',
+                            align: 'center',
+                            onClick: function() {
+                              document.getById(nodeCountId).setText(pagination.currNid());
+                              let node = nodes[pagination.prevNid()];
+                              node.selector.scrollIntoView();
+                              dialog.addFocusable(node.selector);
+                              document.getById(nodeSolveId).setText(node.failureSummary);
+                              document.getById(nodeSourceId).setText(node.source);
+                            },
                           },
-                        },
-                        {
-                          type: 'button',
-                          id: nid,
-                          label: '>',
-                          title: 'Next',
-                          align: 'right',
-                          onClick: function() {
-                            nid = (nid === count - 1) ? 0 : nid + 1;
-                            nodes[nid].selector.scrollIntoView();
+                          {
+                            type: 'html',
+                            id: nodeCountId + vid,
+                            html: '<div id=' + nodeCountId + '>1</div>' + ' of ' + count,
                           },
-                        },
-                      ]
-                    });
+                          {
+                            type: 'button',
+                            id: 'next',
+                            label: '>',
+                            title: 'Next',
+                            align: 'right',
+                            onClick: function() {
+                              document.getById(nodeCountId).setText(pagination.currNid());
+                              let node = nodes[pagination.nextNid()];
+                              node.selector.focus();
+                              node.selector.scrollIntoView();
+                              document.getById(nodeSolveId).setText(node.failureSummary);
+                              document.getById(nodeSourceId).setText(node.source);
+                            },
+                          },
+                          {
+                            type: 'html',
+                            id: vid,
+                            html: '<h2>To solve this violation</h2><div id=' + nodeSolveId + '>' + nodes[pagination.currNid()].failureSummary + '</div>' +
+                              '<h2>Element source: </h2><div id=' + nodeSourceId + '>'  + nodes[pagination.currNid()].source + '</div>'
+                          },
+                        ]
+                      },
+                    );
                   }
-                  elements.push({
-                    type: 'html',
-                    html: html
-                  });
-  
                   dialogDefinition.addContents({
                     id: violation.id,
-                    label: dialogLabel,
+                    label: violation.help,
                     elements: elements,
+                    onLoad: function () {
+                      nodes[pagination.firstNid()].selector.scrollIntoView();
+                      nodes[pagination.firstNid()].selector.focus();
+                      dialog.addFocusable(nodes[pagination.firstNid()]);
+                    }
                   });
                 }
               });
