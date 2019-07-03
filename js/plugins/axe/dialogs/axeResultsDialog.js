@@ -7,25 +7,18 @@
 CKEDITOR.dialog.add( 'axeResultsDialog', function(editor) {
   return {
     title: 'AXE results',
-    // resizable: CKEDITOR.DIALOG_RESIZE_BOTH,
+    resizable: CKEDITOR.DIALOG_RESIZE_BOTH,
     width: 200,
     minHeight: 200,
     contents: [
     
     ],
+    
     // onShow: function () {
     //   // console.log(this.disabled);
     //   console.log(this);
     // },
-    onLoad: function () {
-      console.log(this.getPosition());
-      this.resize(200, 200);
-      // this.foreach(function (el) {
-      //   // if(tags.includes(el.id))
-      //   //   el.setValue('checked', 'checked');
-      //   // console.log(el);
-      // });
-    }
+    
     // onShow: function (data) {
     //   let dialog = this;
     //

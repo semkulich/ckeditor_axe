@@ -106,133 +106,130 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             let dialogName = ev.data.name;
             let dialogDefinition = ev.data.definition;
             if ( dialogName === 'axeResultsDialog' && ev.editor.name === editorName ) {
+              let dialog = dialogDefinition.dialog;
+              let document = dialog.getElement().getDocument();
+  
+              dialog.on('changeContent', function(e) {
+                if (typeof(e.data) === "object") {
+                  let tabId = this._.currentTabId;
+                  let node = e.data;
+                  node.selector.scrollIntoView();
+                  document.getById('nodeCount' + tabId).setText(node.navId + 1);
+                  document.getById('nodeSolve' + tabId).setText(node.failureSummary);
+                  document.getById('nodeSource' + tabId).setText(node.source);
+                  document.getById('nodeTarget' + tabId).setText(node.target);
+                  this.setState(node.navId);
+                }
+              });
+  
+              dialog.on('hide', function(e) {
+                this.reset();
+              });
               
               results.violations.forEach(function (violation, vid) {
+                let nodeCountId = 'nodeCount' + vid;
+                let nodeSolveId = 'nodeSolve' + vid;
+                let nodeSourceId = 'nodeSource' + vid;
+                let nodeTargetId = 'nodeTarget' + vid;
                 // In case if we have child elements.
                 if (typeof(violation.nodes) === "object") {
                   let count = Object.keys(violation.nodes).length;
-                  // Add pagination helper.
-                  let pagination = function() {
-                    let state = 0;
-                    return {
-                      currNid: function() {
-                        let nid = state;
-                        return nid + 1;
-                      },
-                      nextNid: function() {
-                        state++;
-                        if (state === count)
-                          return this.firstNid();
-                        return state;
-                      },
-                      prevNid: function() {
-                        if (state === 0)
-                          return this.lastNid();
-                        state--;
-                        return state;
-                      },
-                      firstNid: function() {
-                        state = 0;
-                        return state;
-                      },
-                      lastNid: function() {
-                        state = count - 1;
-                        return state;
-                      }
-                    };
-                  }();
-  
-                  // Go through child elements.
+                    // Go through child elements.
                   let nodes = [];
                   violation.nodes.forEach(function (node, navId) {
                     if (node.target[0] !== "undefined") {
                       nodes[navId] = {
+                        navId: navId,
+                        source: node.html,
+                        target: node.target[0],
                         selector: editor.document.$.querySelector(node.target[0]),
                         failureSummary: node.failureSummary,
-                        source: node.html
                       }
                     }
                   });
-  
+                  
                   // Add content.
-                  dialogDefinition.width = 200;
-                  let dialog = dialogDefinition.dialog;
-                  let document = dialog.getElement().getDocument();
+                  let labelHtml = '<h2 style="text-transform: capitalize;">' + violation.help + '</h2>';
                   let elements = [];
                   elements.push(
                     {
-                      type: 'html',
-                      html: '<div class="issue-title"><h2>Issue description</h2>' + violation.description + '</div>',
-                    }
+                      type: 'vbox',
+                      width: '600px',
+                      children: [
+                        // Header
+                        {
+                          type: 'hbox',
+                          widths: [ '60%', '1%', '5%', '1%' ],
+                          padding: 10,
+                          children: [
+                            {
+                              type: 'html',
+                              html: labelHtml,
+                            },
+                            {
+                              type: 'button',
+                              id: 'prev',
+                              label: '<',
+                              title: 'Previous',
+                              align: 'right',
+                              onClick: function(e) {
+                                let nid = dialog.state === 0 ? count - 1 : dialog.state - 1;
+                                dialog.fire('changeContent', nodes[nid]);
+                              },
+                            },
+                            {
+                              type: 'html',
+                              html: '<span id=' + nodeCountId + '>1</span>' + ' of ' + count,
+                            },
+                            {
+                              type: 'button',
+                              id: 'next',
+                              label: '>',
+                              title: 'Next',
+                              align: 'right',
+                              onClick: function(e) {
+                                let nid = dialog.state === count - 1 ? 0 : dialog.state + 1;
+                                dialog.fire('changeContent', nodes[nid]);
+                              },
+                            },
+                          ]
+                        },
+                        {
+                          type: 'hbox',
+                          widths: ['40%', '40%'],
+                          padding: 20,
+                          id: 'content',
+                          children: [
+                            {
+                              type: 'html',
+                              style: 'white-space:normal;width:300px;',
+                              html: '<div style="white-space: normal"><h2>Issue description</h2><span>' + violation.description + '</span>' +
+                                '<span class="issue-details">Impact: ' + violation.impact + '</span>' +
+                                '<a href=' +  violation.helpUrl + '>Learn more</a>' +
+                                '<h2>Element location: </h2><span id=' + nodeTargetId + '>' + nodes[0].target + '</span>' +
+                                '<h2>Element source: </h2><span id=' + nodeSourceId + '>' + nodes[0].source + '</span></div>' ,
+                            },
+                            {
+                              type: 'html',
+                              style: 'white-space:normal;width:300px;',
+                              html: '<div style="white-space: normal"><h2>To solve this violation</h2><div id=' + nodeSolveId + '>' + nodes[0].failureSummary + '</div></div>'
+                            },
+                          ]
+                        },
+                      ],
+                    },
                   );
-                  if (count > 1) {
-                    let nodeCountId = 'nodeCount' + vid;
-                    let nodeSolveId = 'nodeSolve' + vid;
-                    let nodeSourceId = 'nodeSource' + vid;
-                    elements.push(
-                      {
-                        type: 'vbox',
-                        // widths: [ '50%', '15%', '20%', '15%' ],
-                        align: 'right',
-                        width: '200px',
-                        children: [
-                          {
-                            type: 'button',
-                            id: 'prev',
-                            label: '<',
-                            title: 'Previous',
-                            align: 'center',
-                            onClick: function() {
-                              document.getById(nodeCountId).setText(pagination.currNid());
-                              let node = nodes[pagination.prevNid()];
-                              node.selector.scrollIntoView();
-                              dialog.addFocusable(node.selector);
-                              document.getById(nodeSolveId).setText(node.failureSummary);
-                              document.getById(nodeSourceId).setText(node.source);
-                            },
-                          },
-                          {
-                            type: 'html',
-                            id: nodeCountId + vid,
-                            html: '<div id=' + nodeCountId + '>1</div>' + ' of ' + count,
-                          },
-                          {
-                            type: 'button',
-                            id: 'next',
-                            label: '>',
-                            title: 'Next',
-                            align: 'right',
-                            onClick: function() {
-                              document.getById(nodeCountId).setText(pagination.currNid());
-                              let node = nodes[pagination.nextNid()];
-                              node.selector.focus();
-                              node.selector.scrollIntoView();
-                              document.getById(nodeSolveId).setText(node.failureSummary);
-                              document.getById(nodeSourceId).setText(node.source);
-                            },
-                          },
-                          {
-                            type: 'html',
-                            id: vid,
-                            html: '<h2>To solve this violation</h2><div id=' + nodeSolveId + '>' + nodes[pagination.currNid()].failureSummary + '</div>' +
-                              '<h2>Element source: </h2><div id=' + nodeSourceId + '>'  + nodes[pagination.currNid()].source + '</div>'
-                          },
-                        ]
-                      },
-                    );
-                  }
+                
                   dialogDefinition.addContents({
-                    id: violation.id,
-                    label: violation.help,
+                    id: vid,
+                    label: labelHtml,
+                    minWidth: 300,
+                    minHeight: 200,
                     elements: elements,
-                    onLoad: function () {
-                      nodes[pagination.firstNid()].selector.scrollIntoView();
-                      nodes[pagination.firstNid()].selector.focus();
-                      dialog.addFocusable(nodes[pagination.firstNid()]);
-                    }
                   });
                 }
               });
+            
             }
           });
         }
@@ -343,7 +340,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       CKEDITOR.dialog.add("axeResultsDialog", this.path + "dialogs/axeResultsDialog.js");
       
       // Add extra scripts when editor is ready.
-      editor.on("instanceReady", function () {
+      editor.on("instanceReady", function (ev) {
         let scripts = [plugin.axe.path, plugin.path + "frame.js"];
         let frame = this;
         scripts.forEach(function (src) {

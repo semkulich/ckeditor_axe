@@ -6,7 +6,6 @@ use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
-use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -45,7 +44,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
   public function getButtons() {
     return [
       'axe' => [
-        'label' => t('Axe'),
+        'label' => $this->t('Axe'),
         'image' =>  drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/axe/icons/axe.png',
       ],
     ];
@@ -73,7 +72,9 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     $editor_settings = $editor->getSettings();
-    $settings = $editor_settings['plugins']['axe'];
+    if (isset($editor_settings['plugins']['axe'])) {
+      $settings = $editor_settings['plugins']['axe'];
+    }
     $config['axe'] = [];
     $config['axe']['path'] = '/core/modules/ckeditor_axe/assets/vendor/axe-core/axe.min.js';
     // Add Accessibility standards to editor.
