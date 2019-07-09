@@ -1,6 +1,10 @@
 "use strict";
 
-let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
 
 (function (CKEDITOR) {
   CKEDITOR.plugins.add("axe", {
@@ -15,7 +19,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     onLoad: function onLoad() {
       // At this point we are going to provide default options for this plugin.
       let axe = {};
-
+      
       /**
        * Default context is "document".
        *
@@ -24,12 +28,12 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * https://www.deque.com/axe/axe-for-web/documentation/api-documentation/#user-content-api-name-axerun
        */
       axe.context = undefined;
-
+      
       /**
        * Settings section which will be passed into aXe run command as options.
        */
       axe.run = {};
-
+      
       /**
        * Tags to use to get default set of rules.
        *
@@ -37,7 +41,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * And default tag is "wcag2a".
        */
       axe.run.runOnly = ['wcag2a'];
-
+      
       /**
        * Rules to exclude from check.
        *
@@ -48,29 +52,29 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * impossible to override this lis list of rules and their values.
        */
       axe.run.rules = {
-        "aria-hidden-body": { enabled: false },
-        bypass: { enabled: false },
-        "document-title": { enabled: false },
-        "frame-tested": { enabled: false },
-        "frame-title-unique": { enabled: false },
-        "frame-title": { enabled: false },
-        "html-has-lang": { enabled: false },
-        "html-lang-valid": { enabled: false },
-        "html-xml-lang-mismatch": { enabled: false },
-        "landmark-banner-is-top-level": { enabled: false },
-        "landmark-complementary-is-top-level": { enabled: false },
-        "landmark-contentinfo-is-top-level": { enabled: false },
-        "landmark-main-is-top-level": { enabled: false },
-        "landmark-no-duplicate-banner": { enabled: false },
-        "landmark-no-duplicate-contentinfo": { enabled: false },
-        "landmark-one-main": { enabled: false },
-        "meta-viewport-large": { enabled: false },
-        "meta-viewport": { enabled: false },
-        "page-has-heading-one": { enabled: false },
-        region: { enabled: false },
-        "valid-lang": { enabled: false }
+        "aria-hidden-body": {enabled: false},
+        bypass: {enabled: false},
+        "document-title": {enabled: false},
+        "frame-tested": {enabled: false},
+        "frame-title-unique": {enabled: false},
+        "frame-title": {enabled: false},
+        "html-has-lang": {enabled: false},
+        "html-lang-valid": {enabled: false},
+        "html-xml-lang-mismatch": {enabled: false},
+        "landmark-banner-is-top-level": {enabled: false},
+        "landmark-complementary-is-top-level": {enabled: false},
+        "landmark-contentinfo-is-top-level": {enabled: false},
+        "landmark-main-is-top-level": {enabled: false},
+        "landmark-no-duplicate-banner": {enabled: false},
+        "landmark-no-duplicate-contentinfo": {enabled: false},
+        "landmark-one-main": {enabled: false},
+        "meta-viewport-large": {enabled: false},
+        "meta-viewport": {enabled: false},
+        "page-has-heading-one": {enabled: false},
+        region: {enabled: false},
+        "valid-lang": {enabled: false}
       };
-
+      
       /**
        * Callback to catch results of the axe check.
        *
@@ -95,148 +99,119 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         let editor = CKEDITOR.instances[editorName];
         // Collect information.
         // In case if we have at least one violation.
-        if (typeof(results.violations) === "object") {
-          // console.log(results.violations);
-          // @todo: Continue development.
-          editor.execCommand('axeResultsDialog');
-
-          CKEDITOR.on('dialogDefinition', function(ev) {
-  
-            // Take the dialog name and its definition from the event data.
-            let dialogName = ev.data.name;
-            let dialogDefinition = ev.data.definition;
-            if ( dialogName === 'axeResultsDialog' && ev.editor.name === editorName ) {
-              let dialog = dialogDefinition.dialog;
-              let document = dialog.getElement().getDocument();
-  
-              dialog.on('changeContent', function(e) {
-                if (typeof(e.data) === "object") {
-                  let tabId = this._.currentTabId;
-                  let node = e.data;
-                  node.selector.scrollIntoView();
-                  document.getById('nodeCount' + tabId).setText(node.navId + 1);
-                  document.getById('nodeSolve' + tabId).setText(node.failureSummary);
-                  document.getById('nodeSource' + tabId).setText(node.source);
-                  document.getById('nodeTarget' + tabId).setText(node.target);
-                  this.setState(node.navId);
+        if (typeof (results.violations) === "object") {
+          results.violations.forEach(function (violation, vid) {
+            let nodeCountId = 'nodeCount' + vid;
+            let nodeSolveId = 'nodeSolve' + vid;
+            let nodeSourceId = 'nodeSource' + vid;
+            let nodeTargetId = 'nodeTarget' + vid;
+            // In case if we have child elements.
+            if (typeof (violation.nodes) === "object") {
+              let count = Object.keys(violation.nodes).length;
+              // Go through child elements.
+              let nodes = [];
+              violation.nodes.forEach(function (node, navId) {
+                if (node.target[0] !== "undefined") {
+                  nodes[navId] = {
+                    navId: navId,
+                    source: node.target[0],
+                    target: node.target[0],
+                    selector: editor.document.$.querySelector(node.target[0]),
+                    failureSummary: node.failureSummary,
+                  }
                 }
-              });
-  
-              dialog.on('hide', function(e) {
-                this.reset();
               });
               
-              results.violations.forEach(function (violation, vid) {
-                let nodeCountId = 'nodeCount' + vid;
-                let nodeSolveId = 'nodeSolve' + vid;
-                let nodeSourceId = 'nodeSource' + vid;
-                let nodeTargetId = 'nodeTarget' + vid;
-                // In case if we have child elements.
-                if (typeof(violation.nodes) === "object") {
-                  let count = Object.keys(violation.nodes).length;
-                    // Go through child elements.
-                  let nodes = [];
-                  violation.nodes.forEach(function (node, navId) {
-                    if (node.target[0] !== "undefined") {
-                      nodes[navId] = {
-                        navId: navId,
-                        source: node.html,
-                        target: node.target[0],
-                        selector: editor.document.$.querySelector(node.target[0]),
-                        failureSummary: node.failureSummary,
-                      }
-                    }
-                  });
-                  
-                  // Add content.
-                  let labelHtml = '<h2 style="text-transform: capitalize;">' + violation.help + '</h2>';
-                  let elements = [];
-                  elements.push(
-                    {
-                      type: 'vbox',
-                      width: '600px',
-                      children: [
-                        // Header
-                        {
-                          type: 'hbox',
-                          widths: [ '60%', '1%', '5%', '1%' ],
-                          padding: 10,
-                          children: [
-                            {
-                              type: 'html',
-                              html: labelHtml,
-                            },
-                            {
-                              type: 'button',
-                              id: 'prev',
-                              label: '<',
-                              title: 'Previous',
-                              align: 'right',
-                              onClick: function(e) {
-                                let nid = dialog.state === 0 ? count - 1 : dialog.state - 1;
-                                dialog.fire('changeContent', nodes[nid]);
-                              },
-                            },
-                            {
-                              type: 'html',
-                              html: '<span id=' + nodeCountId + '>1</span>' + ' of ' + count,
-                            },
-                            {
-                              type: 'button',
-                              id: 'next',
-                              label: '>',
-                              title: 'Next',
-                              align: 'right',
-                              onClick: function(e) {
-                                let nid = dialog.state === count - 1 ? 0 : dialog.state + 1;
-                                dialog.fire('changeContent', nodes[nid]);
-                              },
-                            },
-                          ]
-                        },
-                        {
-                          type: 'hbox',
-                          widths: ['40%', '40%'],
-                          padding: 20,
-                          id: 'content',
-                          children: [
-                            {
-                              type: 'html',
-                              style: 'white-space:normal;width:300px;',
-                              html: '<div style="white-space: normal"><h2>Issue description</h2><span>' + violation.description + '</span>' +
-                                '<span class="issue-details">Impact: ' + violation.impact + '</span>' +
-                                '<a href=' +  violation.helpUrl + '>Learn more</a>' +
-                                '<h2>Element location: </h2><span id=' + nodeTargetId + '>' + nodes[0].target + '</span>' +
-                                '<h2>Element source: </h2><span id=' + nodeSourceId + '>' + nodes[0].source + '</span></div>' ,
-                            },
-                            {
-                              type: 'html',
-                              style: 'white-space:normal;width:300px;',
-                              html: '<div style="white-space: normal"><h2>To solve this violation</h2><div id=' + nodeSolveId + '>' + nodes[0].failureSummary + '</div></div>'
-                            },
-                          ]
-                        },
-                      ],
-                    },
-                  );
-                
+              // Add content.
+              CKEDITOR.on('dialogDefinition', function (ev) {
+                // Take the dialog name and its definition from the event data.
+                let dialogName = ev.data.name;
+                let dialogDefinition = ev.data.definition;
+                if (dialogName === 'axeResultsDialog' && ev.editor.name === editorName) {
+                  let dialog = dialogDefinition.dialog;
+                  let document = dialog.getElement().getDocument();
                   dialogDefinition.addContents({
                     id: vid,
-                    label: labelHtml,
+                    label:  '<h2 style="text-transform: capitalize;">' + violation.help + '</h2>',
                     minWidth: 300,
                     minHeight: 200,
-                    elements: elements,
+                    elements: [
+                      {
+                        type: 'hbox',
+                        widths: ['60%', '1%', '5%', '1%'],
+                        padding: 10,
+                        children: [
+                          {
+                            type: 'html',
+                            html:  '<h2 style="text-transform: capitalize;">' + violation.help + '</h2>',
+                          },
+                          {
+                            type: 'button',
+                            id: 'prev',
+                            label: '<',
+                            title: 'Previous',
+                            align: 'right',
+                            onClick: function (e) {
+                              let nid = dialog.state === 0 ? count - 1 : dialog.state - 1;
+                              dialog.fire('changeContent', nodes[nid]);
+                            },
+                          },
+                          {
+                            type: 'html',
+                            html: '<span id=' + nodeCountId + '>1</span>' + ' of ' + count,
+                          },
+                          {
+                            type: 'button',
+                            id: 'next',
+                            label: '>',
+                            title: 'Next',
+                            align: 'right',
+                            onClick: function (e) {
+                              let nid = dialog.state === count - 1 ? 0 : dialog.state + 1;
+                              dialog.fire('changeContent', nodes[nid]);
+                            },
+                          },
+                        ]
+                      },
+                      {
+                        type: 'html',
+                        style: 'display:flex; justify-content:space-between;',
+                        html: '<div><div style="width:400px"><h2>Issue description</h2><div style="white-space:normal;">' + violation.description + '</div>' +
+                          '<div>Impact: ' + violation.impact + '</div>' +
+                          '<a href=' + violation.helpUrl + '>Learn more</a>' +
+                          '<h2>Element location: </h2><span id=' + nodeTargetId + '>' + nodes[0].target + '</span>' +
+                          '<h2>Element source: </h2><xmp style="white-space:normal;" id=' + nodeSourceId + '>' + nodes[0].source + '</xmp></div>' +
+                          '<div style="width:400px"><h2>To solve this violation</h2><div style="white-space:normal;" id=' + nodeSolveId + '>' + nodes[0].failureSummary + '</div></div></div>',
+                      },
+                    ],
+                  });
+      
+                  dialog.on('changeContent', function (e) {
+                    if (typeof (e.data) === "object") {
+                      let tabId = this._.currentTabId;
+                      let node = e.data;
+                      node.selector.scrollIntoView();
+                      document.getById('nodeCount' + tabId).setText(node.navId + 1);
+                      document.getById('nodeSolve' + tabId).setText(node.failureSummary);
+                      document.getById('nodeSource' + tabId).setText(node.source);
+                      document.getById('nodeTarget' + tabId).setText(node.target);
+                      this.setState(node.navId);
+                    }
+                  });
+      
+                  dialog.on('hide', function (e) {
+                    this.reset();
                   });
                 }
               });
-            
             }
           });
+          editor.execCommand('axeResultsDialog');
         }
-
+        
         return true;
       };
-
+      
       /**
        * Path to aXe library on your website.
        *
@@ -248,7 +223,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * And it will be detected automatically.
        */
       axe.path = undefined;
-
+      
       /**
        * Method is created in order to override default axe settings with
        * custom one.
@@ -271,11 +246,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           // Arguments to run function (including rules which are not allowed.).
           if (typeof settings.run !== "undefined") {
             settings.run.runOnly = typeof settings.run.runOnly !== "undefined" ? settings.run.runOnly : this.run.runOnly;
-            // There are some rules which can't be overridden.
-            let mandatoryRules = this.run.rules;
-            Object.keys(mandatoryRules).forEach(function (key) {
-              settings.run[key] = mandatoryRules[key];
-            });
+            settings.run.rules = typeof settings.run.rules !== "undefined" ? settings.run.rules : this.run.rules;
             this.run = settings.run;
           }
           // Callback to override default behavior.
@@ -291,16 +262,17 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (typeof this.path !== "string") {
           // Get script by file name.
           let scripts = document.querySelectorAll(
-          // @todo: Check compatibility of the attribute selectors.
-          "script[src$='/axe.js'],script[src$='/axe.min.js']");
+            // @todo: Check compatibility of the attribute selectors.
+            "script[src$='/axe.js'],script[src$='/axe.min.js']");
           // Set to static variable.
           if (scripts.length) {
             // @todo: Detect usage of min.js and dev version.
             this.path = scripts[0].src;
-          } else {
+          }
+          else {
             console.error(
-            // @todo: Multilanguage.
-            "Can't fin axe.js or axe.min.js file. Please check if they were included.");
+              // @todo: Multilanguage.
+              "Can't fin axe.js or axe.min.js file. Please check if they were included.");
             return false;
           }
         }
@@ -310,11 +282,11 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return true;
       };
-
+      
       // Save our object into plugin.
       this.axe = axe;
     },
-
+    
     /**
      * Plugin initialization logic goes inside this method.
      *
@@ -334,9 +306,9 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       if (plugin.axe.dialogAccess) {
         execButtonCommand = "axeTagsDialog";
         CKEDITOR.dialog.add("axeTagsDialog", this.path + "dialogs/axeTagsDialog.js");
-        editor.addCommand( "axeTagsDialog", new CKEDITOR.dialogCommand("axeTagsDialog"));
+        editor.addCommand("axeTagsDialog", new CKEDITOR.dialogCommand("axeTagsDialog"));
       }
-      editor.addCommand( "axeResultsDialog", new CKEDITOR.dialogCommand("axeResultsDialog"));
+      editor.addCommand("axeResultsDialog", new CKEDITOR.dialogCommand("axeResultsDialog"));
       CKEDITOR.dialog.add("axeResultsDialog", this.path + "dialogs/axeResultsDialog.js");
       
       // Add extra scripts when editor is ready.
@@ -345,7 +317,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         let frame = this;
         scripts.forEach(function (src) {
           frame.document.getHead().append(frame.document.createElement("script", {
-            attributes: { src: src, type: "text/javascript", defer: true }
+            attributes: {src: src, type: "text/javascript", defer: true}
           }));
         });
       });
@@ -354,8 +326,8 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         label: lang.name,
         command: execButtonCommand,
         icon: plugin.path + "icons/axe.png",
-        // According to other plugins - property "toolbar" should be added by default.
-        // @see plugins/about/plugin.js
+        // According to other plugins - property "toolbar" should be added by
+        // default. @see plugins/about/plugin.js
         toolbar: "others"
       });
       

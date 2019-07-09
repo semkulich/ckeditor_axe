@@ -12,13 +12,13 @@
       return false;
     }
     // Validate incoming command.
-    var msg = event.data;
+    let msg = event.data;
     if (typeof msg.command === "undefined") {
       console.error("Command type is not defined.");
       return false;
     }
     // Validate editor instance.
-    var CKEDITOR = window.parent.CKEDITOR;
+    let CKEDITOR = window.parent.CKEDITOR;
     if (typeof msg.editor === "undefined" || typeof CKEDITOR.instances[msg.editor] === "undefined") {
       console.error("Editor instance is invalid.");
       return false;
@@ -26,8 +26,8 @@
 
     // Execute command (at current moment we have only one type of commands "run").
     if (msg.command === "run") {
-      var args = msg.arguments;
-      var context = document.body;
+      let args = msg.arguments;
+      let context = document.body;
       // We will allow developer to provide custom context if they want.
       context = typeof args.context !== "undefined" ? args.context : context;
       // Redirect execution to parent frame.
