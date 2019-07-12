@@ -1,11 +1,5 @@
 "use strict";
 
-let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
 (function (CKEDITOR) {
   CKEDITOR.plugins.add("axe", {
     // @todo: Investigate axe-core languages system.
@@ -97,9 +91,14 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return false;
         }
         let editor = CKEDITOR.instances[editorName];
+        let text = editor.getSnapshot();
+        
+        console.log(editor);
+        console.log(text);
         // Collect information.
         // In case if we have at least one violation.
-        if (typeof (results.violations) === "object") {
+        if (Object.getOwnPropertyNames(results.violations).length) {
+          let nodes = [];
           results.violations.forEach(function (violation, vid) {
             let nodeCountId = 'nodeCount' + vid;
             let nodeSolveId = 'nodeSolve' + vid;
@@ -109,7 +108,6 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (typeof (violation.nodes) === "object") {
               let count = Object.keys(violation.nodes).length;
               // Go through child elements.
-              let nodes = [];
               violation.nodes.forEach(function (node, navId) {
                 if (node.target[0] !== "undefined") {
                   nodes[navId] = {
@@ -121,7 +119,6 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                   }
                 }
               });
-              
               // Add content.
               CKEDITOR.on('dialogDefinition', function (ev) {
                 // Take the dialog name and its definition from the event data.
@@ -152,8 +149,7 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             title: 'Previous',
                             align: 'right',
                             onClick: function (e) {
-                              let nid = dialog.state === 0 ? count - 1 : dialog.state - 1;
-                              dialog.fire('changeContent', nodes[nid]);
+                              dialog.setState(dialog.state === 0 ? count - 1 : dialog.state - 1);
                             },
                           },
                           {
@@ -166,9 +162,8 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             label: '>',
                             title: 'Next',
                             align: 'right',
-                            onClick: function (e) {
-                              let nid = dialog.state === count - 1 ? 0 : dialog.state + 1;
-                              dialog.fire('changeContent', nodes[nid]);
+                            onClick: function () {
+                              dialog.setState(dialog.state === count - 1 ? 0 : dialog.state + 1);
                             },
                           },
                         ]
@@ -176,30 +171,27 @@ let _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                       {
                         type: 'html',
                         style: 'display:flex; justify-content:space-between;',
-                        html: '<div><div style="width:400px"><h2>Issue description</h2><div style="white-space:normal;">' + violation.description + '</div>' +
+                        html: '<div><div style="width:48%"><h2>Issue description</h2><div style="white-space:normal;">' + violation.description + '</div>' +
                           '<div>Impact: ' + violation.impact + '</div>' +
                           '<a href=' + violation.helpUrl + '>Learn more</a>' +
                           '<h2>Element location: </h2><span id=' + nodeTargetId + '>' + nodes[0].target + '</span>' +
                           '<h2>Element source: </h2><xmp style="white-space:normal;" id=' + nodeSourceId + '>' + nodes[0].source + '</xmp></div>' +
-                          '<div style="width:400px"><h2>To solve this violation</h2><div style="white-space:normal;" id=' + nodeSolveId + '>' + nodes[0].failureSummary + '</div></div></div>',
+                          '<div style="width:48%"><h2>To solve this violation</h2><div style="white-space:normal;" id=' + nodeSolveId + '>' + nodes[0].failureSummary + '</div></div></div>',
                       },
                     ],
                   });
-      
-                  dialog.on('changeContent', function (e) {
-                    if (typeof (e.data) === "object") {
+                  dialog.on('state', function (e) {
+                    if (typeof (e.data) === "number" && nodes[e.data] !== undefined) {
                       let tabId = this._.currentTabId;
-                      let node = e.data;
-                      node.selector.scrollIntoView();
-                      document.getById('nodeCount' + tabId).setText(node.navId + 1);
-                      document.getById('nodeSolve' + tabId).setText(node.failureSummary);
-                      document.getById('nodeSource' + tabId).setText(node.source);
-                      document.getById('nodeTarget' + tabId).setText(node.target);
-                      this.setState(node.navId);
+                      nodes[e.data].selector.scrollIntoView({block: "center"});
+                      document.getById('nodeCount' + tabId).setText(nodes[e.data].navId + 1);
+                      document.getById('nodeSolve' + tabId).setText(nodes[e.data].failureSummary);
+                      document.getById('nodeSource' + tabId).setText(nodes[e.data].source);
+                      document.getById('nodeTarget' + tabId).setText(nodes[e.data].target);
+                      this.setState(nodes[e.data].navId);
                     }
                   });
-      
-                  dialog.on('hide', function (e) {
+                  dialog.on('hide', function () {
                     this.reset();
                   });
                 }

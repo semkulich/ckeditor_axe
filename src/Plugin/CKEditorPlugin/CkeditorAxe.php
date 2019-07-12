@@ -45,7 +45,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
     return [
       'axe' => [
         'label' => $this->t('Axe'),
-        'image' =>  drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/axe/icons/axe.png',
+        'image' => drupal_get_path('module', 'ckeditor_axe') . '/js/plugins/axe/icons/axe.png',
       ],
     ];
   }
@@ -79,7 +79,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
     $config['axe']['path'] = '/core/modules/ckeditor_axe/assets/vendor/axe-core/axe.min.js';
     // Add Accessibility standards to editor.
     foreach ($this->options() as $option => $description) {
-      $config['axe']['tags'][$option] = isset($settings['options'][$option])  ? $settings['options'][$option] : FALSE;
+      $config['axe']['tags'][$option] = isset($settings['options'][$option]) ? $settings['options'][$option] : FALSE;
       if (isset($settings['options'][$option]) && $settings['options'][$option]) {
         $config['axe']['run']['runOnly'][] = $option;
       }
@@ -113,7 +113,7 @@ class CkeditorAxe extends CKEditorPluginBase implements CKEditorPluginConfigurab
       $form['options'][$option] = [
         '#type' => 'checkbox',
         '#title' => $description,
-        '#default_value' => isset($settings['options'][$option])  ? $settings['options'][$option] : $default_value,
+        '#default_value' => isset($settings['options'][$option]) ? $settings['options'][$option] : $default_value,
       ];
     }
     return $form;

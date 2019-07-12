@@ -8,19 +8,15 @@ CKEDITOR.dialog.add( 'axeResultsDialog', function(editor) {
   return {
     title: 'AXE results',
     resizable: CKEDITOR.DIALOG_RESIZE_BOTH,
-    width: 200,
+    minWidth: 300,
     minHeight: 200,
-    contents: [
-    ],
-    
-    onShow: function () {
-      let rect = editor.container.$.getBoundingClientRect();
-      // console.log(this.disabled);
-      // this.width
-      this.move(rect.x + rect.width, 0);
-      // window.scrollTo(0, 1000);
-      // console.log(this);
-      // console.log(editor.container.$.getBoundingClientRect());
+    contents: [],
+    onShow: function (e) {
+      let container = editor.container.$;
+      container.scrollIntoView({block: "center"});
+      let containerRect = container.getBoundingClientRect();
+      this.resize(window.innerWidth - containerRect.right, containerRect.height);
+      this.move(containerRect.width, 0);
     },
   };
 });
