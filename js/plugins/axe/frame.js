@@ -27,7 +27,8 @@
     // Execute command (at current moment we have only one type of commands "run").
     if (msg.command === "run") {
       let args = msg.arguments;
-      let context = document.body;
+      let editor = CKEDITOR.instances[msg.editor];
+      let context = new DOMParser().parseFromString(editor.getData(), "text/html");
       // We will allow developer to provide custom context if they want.
       context = typeof args.context !== "undefined" ? args.context : context;
       // Redirect execution to parent frame.

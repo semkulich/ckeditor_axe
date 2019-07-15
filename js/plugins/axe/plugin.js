@@ -91,10 +91,6 @@
           return false;
         }
         let editor = CKEDITOR.instances[editorName];
-        let text = editor.getSnapshot();
-        
-        console.log(editor);
-        console.log(text);
         // Collect information.
         // In case if we have at least one violation.
         if (Object.getOwnPropertyNames(results.violations).length) {
@@ -183,7 +179,7 @@
                   dialog.on('state', function (e) {
                     if (typeof (e.data) === "number" && nodes[e.data] !== undefined) {
                       let tabId = this._.currentTabId;
-                      nodes[e.data].selector.scrollIntoView({block: "center"});
+                      nodes[e.data].selector.scrollIntoView({block: "nearest"});
                       document.getById('nodeCount' + tabId).setText(nodes[e.data].navId + 1);
                       document.getById('nodeSolve' + tabId).setText(nodes[e.data].failureSummary);
                       document.getById('nodeSource' + tabId).setText(nodes[e.data].source);
